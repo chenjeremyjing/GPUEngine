@@ -18,5 +18,9 @@
 
 @property (nonatomic, assign) CATransform3D textMaskTransform;
 
+@property (nonatomic, assign) BOOL colorMaskHidden;
+@property (nonatomic, assign) BOOL eraserMaskHidden;
+@property (nonatomic, assign) BOOL textMaskHidden;
+
 
 @end

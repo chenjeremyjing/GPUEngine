@@ -15,6 +15,12 @@
 
 @property (nonatomic, strong) FilterLineStyleHelper *filterLinerStyleHelper;
 
+@property (nonatomic, strong) AVPlayer *player;
+
+@property (nonatomic, assign) CMTime startTime;
+
+@property (nonatomic, assign) CMTime endTime;
+
 @end
 
 @implementation FillFilterRenderTask
@@ -24,10 +30,63 @@
     [self.filterLinerStyleHelper.sufixFilter addTarget:target];
 }
 
+- (void)processAll {
+    if ([_fillTexture isKindOfClass:[GPUImageMovie class]]) {
+        GPUImageMovie *movie = (GPUImageMovie *)_fillTexture;
+        [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
+        [movie startProcessing];
+        [self.player play];
+    } else {
+        GPUImagePicture *pic = (GPUImagePicture *)self.fillTexture;
+        [pic processImage];
+    }
+}
+
+- (void)setVideoSpeed:(GPUVideoSpeedType)speed{
+    switch (speed) {
+        case GPUVideo2SpeedAccelerateType:
+            self.player.rate = 2.0;
+            break;
+        case GPUVideoSpeedNormalType:
+            self.player.rate = 1.0;
+            break;
+        case GPUVideo2SpeedDecelerateType:
+            self.player.rate = 0.5;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)setVideoStartTime:(CMTime)startTime;
+{
+    self.startTime = startTime;
+    [self seekToTime:startTime];
+}
+
+- (void)setVideoEndTime:(CMTime)endTime
+{
+    self.endTime = endTime;
+    [self seekToTime:endTime];
+}
+
+- (void)seekToTime:(CMTime)time {
+    [self.player seekToTime:time toleranceBefore:CMTimeMake(0, 0) toleranceAfter:CMTimeMake(0, 0) completionHandler:^(BOOL finished) {
+        if (finished) {
+            [self.player play];
+        }
+    }];
+}
+
 #pragma mark -- Setter && Getter
 - (void)setFillTexture:(GPUImageOutput *)fillTexture {
     [_fillTexture removeAllTargets];
     _fillTexture = fillTexture;
+    if ([fillTexture isKindOfClass:[GPUImageMovie class]]) {
+        GPUImageMovie *movie = (GPUImageMovie *)fillTexture;
+        [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
+    }
     [_fillTexture addTarget:self.fillTransFilter];
     [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
 }
@@ -66,5 +125,21 @@
     }
     return _filterLinerStyleHelper;
 }
+
+- (AVPlayer *)player {
+    if (!_player) {
+        _player = [[AVPlayer alloc] init];
+        _player.volume = 0;
+        __weak typeof (self)weakSelf = self;
+        [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
+                [weakSelf.player seekToTime:weakSelf.startTime];
+                [weakSelf.player play];
+            }
+        }];
+    }
+    return _player;
+}
+
 
 @end

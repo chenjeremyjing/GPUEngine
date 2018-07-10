@@ -9,7 +9,14 @@
 #import <GPUImage/GPUImage.h>
 
 @interface MaskCompositeFilter : GPUImageThreeInputFilter
+{
+    GLint eraserMaskHiddenUniform;
+    GLint textMaskHiddenUniform;
+    GLint colorMaskHiddenUniform;
+}
 
-//@property (nonatomic, assign) BOOL 
+@property(readwrite, nonatomic) BOOL eraserMaskHidden;
+@property(readwrite, nonatomic) BOOL textMaskHidden;
+@property(readwrite, nonatomic) BOOL colorMaskHidden;
 
 @end

@@ -9,36 +9,24 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "FilterLineStyleHelper.h"
 
-@class filterLineGroup;
-@class FilterTest;
-@class Gfilter;
-
-typedef void(^filterAdjustBlock)(FilterTest *filter);
-typedef void(^processingBlock)(CGFloat progress);
-typedef  enum GPUVideoSpeedType{
-    GPUVideoSpeedNormalType,
-    GPUVideo4SpeedAccelerateType,
-    GPUVideo2SpeedAccelerateType,
-    GPUVideo4SpeedDecelerateType,
-    GPUVideo2SpeedDecelerateType,
-}GPUVideoSpeedType ;
 
 @interface GPURenderEngine : NSObject
 
-
++ (instancetype)renderEngine;
 
 /**
  切换底图和填充涂层的混合效果
-
+ 
  @param blendFilter 混合效果滤镜
  */
-- (void)updateBaseAndFillBlendFilter:(Gfilter *)blendFilter;
+- (void)updateBaseAndFillBlendFilter:(GPUImageTwoInputFilter *)blendFilter;
 
 #pragma mark -- 底图相关处理接口方法
 /**
  底图涂层切换资源
-
+ 
  @param baseImage 底图图片
  */
 - (void)updateBaseResourceWithImage:(UIImage *)baseImage;
@@ -46,17 +34,20 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  切换底图滤镜风格
-
- @param filterLine 风格滤镜链
+ 
+ @param filterStyle 滤镜风格枚举
  @param oneFilter 风格滤镜链可调滤镜1
  @param anotherFilter 风格滤镜链可调滤镜2
  */
-- (void)updateBaseFilterStyleWithFilterLine:(filterLineGroup *)filterLine adjustOneFilter:(filterAdjustBlock)oneFilter anotherFilter:(filterAdjustBlock)anotherFilter;
+- (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle;
+- (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue;
+- (void)updateBaseFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue;
+
 
 #pragma mark -- 填充涂层相关接口方法
 /**
  填充层切换资源 - 图片
-
+ 
  @param fillImage 切换图片
  */
 - (void)updateFillResourceWithImage:(UIImage *)fillImage;
@@ -64,7 +55,7 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层切换资源 - 视频资源
-
+ 
  @param videoAsset 视频资源
  */
 - (void)updateFillResourceWithVideoAsset:(AVAsset *)videoAsset;
@@ -72,17 +63,19 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  切换填充层滤镜风格
-
+ 
  @param filterLine 风格滤镜链
  @param oneFilter 风格滤镜链可调滤镜1
  @param anotherFilter 风格滤镜链可调滤镜2
  */
-- (void)updateFillFilterStyleWithFilterLine:(filterLineGroup *)filterLine adjustOneFilter:(filterAdjustBlock)oneFilter anotherFilter:(filterAdjustBlock)anotherFilter;
+- (void)updateFillFilterLineStyleWithFilterLine:(FilterLineStyleType)filterStyle;
+- (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue;
+- (void)updateFillFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue;
 
 
 /**
  填充层Transform调整
-
+ 
  @param transform transform
  */
 - (void)updateFillWithTransform:(CATransform3D)transform;
@@ -90,7 +83,7 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层 纯色补偿 切换补偿颜色
-
+ 
  @param compensationColor 颜色
  */
 - (void)updateFillCompensationColor:(UIColor *)compensationColor;
@@ -98,7 +91,7 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层 纯色补偿不透明度调整
-
+ 
  @param alpha 不透明度
  */
 - (void)updateFillCompensationColorAlpha:(CGFloat)alpha;
@@ -108,7 +101,7 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层遮罩 -- 文字遮罩
-
+ 
  @param textImage 文字转成图片
  */
 - (void)updateTextMaskWithTextImage:(UIImage *)textImage;
@@ -124,7 +117,7 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层遮罩 -- 文字遮罩的Transform调整
-
+ 
  @param transform 文字遮罩的Transform
  */
 - (void)updateTextMaskWithTransform:(CATransform3D)transform;
@@ -132,24 +125,23 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  填充层遮罩 -- 橡皮擦遮罩
-
+ 
  @param eraserRawData 橡皮擦层纹理Data
  */
-- (void)updateEraserMaskWithEraserRawData:(char *)eraserRawData;
+- (void)updateEraserMaskWithEraserRawData:(GLubyte *)eraserRawData;
+
 
 /**
  填充层遮罩 -- 颜色镂空遮罩
-
- @param color 颜色（针对底图）
- @param minToleranceColor 颜色选取范围的偏差最小色
- @param maxToleranceColor 颜色选取范围的偏差最大色
+ 
+ @param colorAndTolerance 颜色选取数据结构题
  */
-- (void)updateColorMaskWithColor:(UIColor *)color andMinToleranceColor:(UIColor *)minToleranceColor maxToleranceColor:(UIColor *)maxToleranceColor;
+- (void)updateColorMaskColorAndTolerance:(render_color)colorAndTolerance;
 
 
 /**
  填充涂层及遮罩是否隐藏
-
+ 
  @param isHidden 是否隐藏
  */
 - (void)setMaskAndFillHidden:(BOOL)isHidden;
@@ -157,17 +149,19 @@ typedef  enum GPUVideoSpeedType{
 
 /**
  选取视频资源特定片段调整速度
-
+ 
  @param speed 速度 -4（4倍慢速）  -2（2倍慢速）  0（正常速度）  2（2倍快速） 4（2倍快速）
  @param startTime 视频资源片段的起始时间
  @param endTime 视频资源片段的结束时间
  */
-- (void)setFillVideoSpeed:(GPUVideoSpeedType)speed startTime:(CMTime)startTime endTime:(CMTime)endTime;
+- (void)setFillVideoSpeed:(GPUVideoSpeedType)speed;
+- (void)setFillVideoStartTime:(CMTime)startTime;
+- (void)setFillVideoEndTime:(CMTime)endTime;
 
 
 /**
  导出处理过的视频资源
-
+ 
  @param cachePath 导出路径
  @param progressBlock 导出进度及状态
  */

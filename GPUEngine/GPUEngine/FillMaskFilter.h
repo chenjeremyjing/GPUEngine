@@ -10,4 +10,11 @@
 
 @interface FillMaskFilter : GPUImageTwoInputFilter
 
+{
+    GLint eraserHighlightUniform;
+}
+
+@property(readwrite, nonatomic) BOOL eraserHighlight;
+
+
 @end

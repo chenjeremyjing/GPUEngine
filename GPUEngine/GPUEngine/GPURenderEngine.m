@@ -49,26 +49,37 @@ static GPURenderEngine *engine = nil;
 - (void)updateBaseResourceWithImage:(UIImage *)baseImage
 {
     self.baseRenderTask.baseTexture = [[GPUImagePicture alloc] initWithImage:baseImage];
+    [self processAll];
 }
-- (void)updateBaseFilterStyleWithFilterLine:(filterLineGroup *)filterLine adjustOneFilter:(filterAdjustBlock)oneFilter anotherFilter:(filterAdjustBlock)anotherFilter
+
+- (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
+    
+}
+
+- (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
+{
+    
+}
+- (void)updateBaseFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue
+{
+    
 }
 
 //填充
 - (void)updateFillResourceWithImage:(UIImage *)fillImage
 {
     self.fillRendereTask.fillTexture = [[GPUImagePicture alloc] initWithImage:fillImage];
+    [self processAll];
+
 }
 
 - (void)updateFillResourceWithVideoAsset:(AVAsset *)videoAsset
 {
     AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:videoAsset];
     self.fillRendereTask.fillTexture = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
-}
+    [self processAll];
 
-- (void)updateFillFilterStyleWithFilterLine:(filterLineGroup *)filterLine adjustOneFilter:(filterAdjustBlock)oneFilter anotherFilter:(filterAdjustBlock)anotherFilter
-{
-    
 }
 
 - (void)updateFillWithTransform:(CATransform3D)transform
@@ -86,10 +97,25 @@ static GPURenderEngine *engine = nil;
     self.fillRendereTask.compensationAlpha = alpha;
 }
 
+- (void)updateFillFilterLineStyleWithFilterLine:(FilterLineStyleType)filterStyle
+{
+    
+}
+- (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
+{
+    
+}
+- (void)updateFillFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue
+{
+    
+}
+
 //遮罩 文字
 - (void)updateTextMaskWithTextImage:(UIImage *)textImage
 {
     self.maskRenderTask.textMaskTexture = [[GPUImagePicture alloc] initWithImage:textImage];
+    [self processAll];
+
 }
 - (void)updateTextMaskWithTextLayer:(CALayer *)textLayer
 {
@@ -98,25 +124,39 @@ static GPURenderEngine *engine = nil;
 - (void)updateTextMaskWithTransform:(CATransform3D)transform
 {
     self.maskRenderTask.textMaskTransform = transform;
+    
 }
 
 //遮罩橡皮擦
 - (void)updateEraserMaskWithEraserRawData:(GLubyte *)eraserRawData
 {
     self.maskRenderTask.eraserMaskTexture = [[GPUImageRawDataInput alloc] initWithBytes:eraserRawData size:CGSizeMake(100, 100)];
+    [self processAll];
 }
 
 //遮罩颜色
-- (void)updateColorMaskColorAndTolerance:(struct colorWithTolerance)colorAndTolerance
+- (void)updateColorMaskColorAndTolerance:(render_color)colorAndTolerance
 {
     self.baseRenderTask.maskColor = colorAndTolerance;
 }
 - (void)setMaskAndFillHidden:(BOOL)isHidden
 {
+    self.maskRenderTask.eraserMaskHidden = YES;
+    self.maskRenderTask.textMaskHidden = YES;
+    self.maskRenderTask.colorMaskHidden = NO;
 }
 
-- (void)setFillVideoSpeed:(GPUVideoSpeedType)speed startTime:(CMTime)startTime endTime:(CMTime)endTime{
-    
+- (void)setFillVideoSpeed:(GPUVideoSpeedType)speed
+{
+    [self.fillRendereTask setVideoSpeed:speed];
+}
+- (void)setFillVideoStartTime:(CMTime)startTime
+{
+    [self.fillRendereTask setVideoStartTime:startTime];
+}
+- (void)setFillVideoEndTime:(CMTime)endTime
+{
+    [self.fillRendereTask setVideoEndTime:endTime];
 }
 
 - (void)exportWithCachePath:(NSString *)cachePath andProcessingBlock:(processingBlock)progressBlock{
@@ -126,7 +166,18 @@ static GPURenderEngine *engine = nil;
 - (void)processAll
 {
     
+    if (!self.fillRendereTask.fillTexture
+        || !self.baseRenderTask.baseTexture
+        || !self.maskRenderTask.eraserMaskTexture
+        || !self.maskRenderTask.textMaskTexture
+        || !self.maskRenderTask.colorMaskTexture) {
+        return;
+    }
     
+    [self.fillRendereTask addTarget:self.maskFilter];
+    [self.maskRenderTask addTarget:self.maskFilter];
+    [self.baseRenderTask addTarget:self.blendFilter];
+    [self.maskFilter addTarget:self.blendFilter];
     [self.baseRenderTask processAll];
     [self.fillRendereTask processAll];
     [self.maskRenderTask processAll];

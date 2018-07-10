@@ -9,19 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "GPUImage.h"
 
-struct render_color {
-    CGFloat r;
-    CGFloat g;
-    CGFloat b;
-};
-
-struct colorWithTolerance {
-    struct render_color color;
-    struct render_color color_Min;
-    struct render_color color_Max;
-    
-};
-
 @interface GPURenderTask : NSObject
 
 - (void)addTarget:(id<GPUImageInput>)target;

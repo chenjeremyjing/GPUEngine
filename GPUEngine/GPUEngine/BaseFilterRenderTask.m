@@ -67,7 +67,7 @@
     self.baseTransFilter.transform3D = _baseTransform;
 }
 
-- (void)setMaskColor:(struct colorWithTolerance)maskColor{
+- (void)setMaskColor:(render_color)maskColor{
     _maskColor = maskColor;
 //    self.colorMaskfilter
 }

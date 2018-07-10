@@ -120,6 +120,7 @@
 		3FCE3AE920E5262C005B6D17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3FCE3AEF20E5269D005B6D17 /* GPURenderEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPURenderEngine.h; sourceTree = "<group>"; };
 		3FCE3AF020E5269D005B6D17 /* GPURenderEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPURenderEngine.m; sourceTree = "<group>"; };
+		3FCE3D7520F4F420005B6D17 /* Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		E8328F05643C388A40C5943B /* Pods-GPUEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPUEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine.release.xcconfig"; sourceTree = "<group>"; };
 		F40DE1BBF7A5D20A30ECAF3A /* Pods-GPUEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPUEngine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -204,6 +205,7 @@
 				3F4CA49020F37A1B003C1FD0 /* b.png */,
 				3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */,
 				3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */,
+				3FCE3D7520F4F420005B6D17 /* Header.h */,
 				3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */,
 				3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */,
 				3FCE3ADE20E5262C005B6D17 /* ViewController.h */,
@@ -545,10 +547,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = JC63S7B9YZ;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/GPUEngine/Header.h";
 				INFOPLIST_FILE = GPUEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "J-S.GPUEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -558,10 +562,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = JC63S7B9YZ;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/GPUEngine/Header.h";
 				INFOPLIST_FILE = GPUEngine/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "J-S.GPUEngine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};

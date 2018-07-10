@@ -56,4 +56,19 @@
     [_colorMaskTexture addTarget:self.compositeFilter atTextureLocation:colorMaskTextureLocation];
 }
 
+- (void)setColorMaskHidden:(BOOL)colorMaskHidden {
+    _colorMaskHidden = colorMaskHidden;
+    self.compositeFilter.colorMaskHidden = _colorMaskHidden;
+}
+
+- (void)setTextMaskHidden:(BOOL)textMaskHidden {
+    _textMaskHidden = textMaskHidden;
+    self.compositeFilter.textMaskHidden = _textMaskHidden;
+}
+
+- (void)setEraserMaskHidden:(BOOL)eraserMaskHidden {
+    _eraserMaskHidden = eraserMaskHidden;
+    self.compositeFilter.eraserMaskHidden = _eraserMaskHidden;
+}
+
 @end

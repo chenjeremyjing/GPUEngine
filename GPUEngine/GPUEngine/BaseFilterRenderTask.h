@@ -25,7 +25,7 @@
 @property (nonatomic, strong) UIColor *compensationColor;
 
 //底图颜色选去楼空轮廓颜色
-@property (nonatomic, assign) struct colorWithTolerance maskColor;
+@property (nonatomic, assign) struct render_color maskColor;
 
 //底图颜色轮廓输出
 @property (nonatomic, strong) ColorMaskFilter *colorMaskfilter;

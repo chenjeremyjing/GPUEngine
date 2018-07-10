@@ -253,6 +253,30 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 - (void)setupFilters {
     
+    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]];
+
+    
+    GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
+    //base
+    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"b"]];
+    //fill
+    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
+    //textMask
+    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b"]];
+    
+    GLubyte *byte = nil;
+    //eraserMask
+    [renderEngine updateEraserMaskWithEraserRawData:byte];
+    
+    render_color maskColor = {
+        0.1,
+        0.1,
+        0.1,
+        0.1
+    };
+    //baseColorSelectMask
+    [renderEngine updateColorMaskColorAndTolerance:maskColor];
+    
     pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
     
     self.baseTrans = [[GPUImageTransformFilter alloc] init];
@@ -261,7 +285,6 @@ typedef NS_ENUM(NSInteger, currentTarget)
     self.blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
     self.blendFilter.mix = 0.5;
     
-    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]];
     
     AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
     self.player = [[AVPlayer alloc] initWithPlayerItem:item];
