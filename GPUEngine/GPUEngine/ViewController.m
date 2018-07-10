@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "GPUImage.h"
+#import "GPURenderEngine.h"
 
 typedef NS_ENUM(NSInteger, currentTarget)
 {
@@ -20,8 +21,16 @@ typedef NS_ENUM(NSInteger, currentTarget)
 {
     GPUImagePicture *pic;
     GPUImageView *gView;
-    
+    UISlider *_videoTimeLine;
 }
+
+@property (nonatomic, strong) UISlider *videoTimeLine;
+@property (nonatomic, strong) UIButton *colorBtn;
+@property (nonatomic, strong) UIButton *styleColorCompensationBtn;
+@property (nonatomic, strong) UISlider *styleColorCompensationAlphaSlider;
+@property (nonatomic, strong) UISlider *styleFilterSlider1;
+@property (nonatomic, strong) UISlider *styleFilterSlider2;
+
 
 @property (nonatomic, strong) AVPlayer *player;
 
@@ -38,6 +47,8 @@ typedef NS_ENUM(NSInteger, currentTarget)
 @property (nonatomic, strong) UIImageView *imgView;
 
 @property (nonatomic, assign) currentTarget editTarget;
+
+@property (nonatomic, assign) NSInteger speed;
 
 
 @end
@@ -86,11 +97,132 @@ typedef NS_ENUM(NSInteger, currentTarget)
     [self.view addSubview:hiddenBtn];
     hiddenBtn.frame = CGRectMake(0, CGRectGetMaxY(targetSwitchBtn.frame) + 10, 50, 30);
     
+    UIButton *speedBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [speedBtn setTitle:@"speed" forState:UIControlStateNormal];
+    [speedBtn addTarget:self action:@selector(speedBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:speedBtn];
+    speedBtn.frame = CGRectMake(0, CGRectGetMaxY(hiddenBtn.frame) + 10, 50, 30);
     
+    _videoTimeLine = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxY(speedBtn.frame) + 20, CGRectGetMinY(speedBtn.frame), 200, 30)];
+    [self.view addSubview:_videoTimeLine];
+    _videoTimeLine.minimumValue = 0;
+    _videoTimeLine.maximumValue = 1;
+    [_videoTimeLine addTarget:self action:@selector(timeLineOffset:) forControlEvents:UIControlEventValueChanged];
+    
+    _colorBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_colorBtn setTitle:@"colorMask" forState:UIControlStateNormal];
+    [_colorBtn addTarget:self action:@selector(colorBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_colorBtn];
+    _colorBtn.frame = CGRectMake(0, CGRectGetMaxY(speedBtn.frame) + 10, 50, 30);
+    _colorBtn.hidden = YES;
+    
+    UISlider *colorOffsetSlider = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxY(_colorBtn.frame) + 20, CGRectGetMinY(_colorBtn.frame), 200, 30)];
+    [self.view addSubview:colorOffsetSlider];
+    colorOffsetSlider.minimumValue = -0.1;
+    colorOffsetSlider.maximumValue = +0.1;
+    [colorOffsetSlider addTarget:self action:@selector(colorOffset:) forControlEvents:UIControlEventValueChanged];
+    
+    UIButton *styleBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [styleBtn setTitle:@"style-Off" forState:UIControlStateNormal];
+    [styleBtn addTarget:self action:@selector(style:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:styleBtn];
+    styleBtn.frame = CGRectMake(0, CGRectGetMaxY(_colorBtn.frame) + 10, 50, 30);
+    styleBtn.selected = NO;
+    
+    _styleColorCompensationBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_styleColorCompensationBtn setTitle:@"white" forState:UIControlStateNormal];
+    [_styleColorCompensationBtn addTarget:self action:@selector(colorChanged:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_styleColorCompensationBtn];
+    _styleColorCompensationBtn.frame = CGRectMake(0, CGRectGetMaxY(styleBtn.frame) + 10, 50, 30);
+    _styleColorCompensationBtn.selected = YES;
+    
+    _styleColorCompensationAlphaSlider = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxY(styleBtn.frame) + 20, CGRectGetMinY(styleBtn.frame), 200, 30)];
+    [self.view addSubview:_styleColorCompensationAlphaSlider];
+    _styleColorCompensationAlphaSlider.minimumValue = -0.1;
+    _styleColorCompensationAlphaSlider.maximumValue = +0.1;
+    [_styleColorCompensationAlphaSlider addTarget:self action:@selector(colorAlpha:) forControlEvents:UIControlEventValueChanged];
+    
+    _styleFilterSlider1 = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMinX(_styleColorCompensationAlphaSlider.frame), CGRectGetMaxY(_styleColorCompensationAlphaSlider.frame) + 10, 200, 30)];
+    [self.view addSubview:_styleFilterSlider1];
+    _styleFilterSlider1.minimumValue = -0.1;
+    _styleFilterSlider1.maximumValue = +0.1;
+    [_styleFilterSlider1 addTarget:self action:@selector(filterValue1:) forControlEvents:UIControlEventValueChanged];
+    
+    _styleFilterSlider2 = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMinX(_styleFilterSlider1.frame), CGRectGetMaxY(_styleFilterSlider1.frame) + 10, 200, 30)];
+    [self.view addSubview:_styleFilterSlider2];
+    _styleFilterSlider2.minimumValue = -0.1;
+    _styleFilterSlider2.maximumValue = +0.1;
+    [_styleFilterSlider2 addTarget:self action:@selector(filterValue2:) forControlEvents:UIControlEventValueChanged];
+    
+}
+
+- (void)colorAlpha:(UISlider *)sender
+{
+    
+}
+
+- (void)filterValue1:(UISlider *)sender
+{
+    
+}
+
+- (void)filterValue2:(UISlider *)sender
+{
+    
+}
+
+- (void)style:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    _styleColorCompensationBtn.hidden = sender.selected;
+    _styleFilterSlider1.hidden = sender.selected;
+    _styleFilterSlider1.hidden = sender.selected;
+    _styleColorCompensationAlphaSlider.hidden = sender.selected;
+    [sender setTitle:sender.selected ? @"style-On" : @"style-Off" forState:UIControlStateNormal];
+
+}
+
+- (void)colorChanged:(UIButton *)sender
+{
+    sender.selected = !sender.selected;
+    UIColor *color = sender.selected ? [UIColor whiteColor] : [UIColor blueColor];
+    [sender setTitle:sender.selected ? @"white" : @"blue" forState:UIControlStateNormal];
+}
+
+- (void)colorBtn:(UIButton *)sender
+{
+    
+}
+
+- (void)colorOffset:(UISlider *)slider
+{
+    
+}
+
+- (void)timeLineOffset:(UISlider *)sender
+{
+    CGFloat second = sender.value * CMTimeGetSeconds(self.player.currentItem.duration);
+    int preferredTimeScale = 1 * NSEC_PER_SEC;
+    CMTime currentTime = CMTimeMakeWithSeconds(second, preferredTimeScale);
+    [self.player seekToTime:currentTime];
+    [self.player play];
 }
 
 - (void)hiddenFill:(UIButton *)sender
 {
+    
+}
+
+- (void)speedBtn:(UIButton *)sender
+{
+    self.speed++;
+    if (self.speed > 2) {
+        self.speed = 0;
+    }
+    
+    CGFloat speed = self.speed * 2.0;
+    
+    self.player.rate = speed;
     
 }
 
@@ -100,6 +232,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
     if (self.editTarget > 2) {
         self.editTarget = 0;
     }
+    _colorBtn.hidden = YES;
     switch (self.editTarget) {
         case currentTargetBase:
             [sender setTitle:@"Base" forState:UIControlStateNormal];
@@ -109,6 +242,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
             break;
         case currentTargetText:
             [sender setTitle:@"Text" forState:UIControlStateNormal];
+            _colorBtn.hidden = NO;
             break;
             
         default:
@@ -139,6 +273,11 @@ typedef NS_ENUM(NSInteger, currentTarget)
     }
     __weak typeof(self) weakSelf = self;
     [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        
+        CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
+        CGFloat current = CMTimeGetSeconds(weakSelf.player.currentItem.currentTime);
+        
+        weakSelf.videoTimeLine.value = current / duration;
         
         if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
             [weakSelf.player pause];
