@@ -1,0 +1,476 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */; };
+		3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */; };
+		3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */; };
+		3F394E1020EA10020056B239 /* FillMaskFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0020EA0FFE0056B239 /* FillMaskFilter.m */; };
+		3F394E1120EA10020056B239 /* MaskCompositeFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */; };
+		3F394E1220EA10020056B239 /* ColorMaskFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0220EA0FFF0056B239 /* ColorMaskFilter.m */; };
+		3F394E1320EA10020056B239 /* BaseFilterRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0420EA0FFF0056B239 /* BaseFilterRenderTask.m */; };
+		3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0920EA10010056B239 /* MaskRenderTask.m */; };
+		3F394E1520EA10020056B239 /* GPURenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0B20EA10020056B239 /* GPURenderTask.m */; };
+		3F4CA48F20F37A0C003C1FD0 /* a.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA48E20F37A0C003C1FD0 /* a.mp4 */; };
+		3F4CA49120F37A1B003C1FD0 /* b.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA49020F37A1B003C1FD0 /* b.png */; };
+		3FA4E27620ECD6E700EE397D /* sd1527562013_2.MP4 in Resources */ = {isa = PBXBuildFile; fileRef = 3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */; };
+		3FA4E27820ECD71C00EE397D /* IMG_43CCB4204EBC-1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */; };
+		3FCE3ADA20E5262C005B6D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3AD920E5262C005B6D17 /* main.m */; };
+		3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */; };
+		3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADF20E5262C005B6D17 /* ViewController.m */; };
+		3FCE3AE320E5262C005B6D17 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FCE3AE120E5262C005B6D17 /* Main.storyboard */; };
+		3FCE3AE520E5262C005B6D17 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3FCE3AE420E5262C005B6D17 /* Assets.xcassets */; };
+		3FCE3AE820E5262C005B6D17 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FCE3AE620E5262C005B6D17 /* LaunchScreen.storyboard */; };
+		3FCE3AF120E5269D005B6D17 /* GPURenderEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3AF020E5269D005B6D17 /* GPURenderEngine.m */; };
+		FB8935B17F4764C5A922430C /* libPods-GPUEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADDA088E6AA45CDA2274F9B /* libPods-GPUEngine.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3ADDA088E6AA45CDA2274F9B /* libPods-GPUEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GPUEngine.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F394DFB20EA0FFB0056B239 /* FilterLineStyleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterLineStyleHelper.h; sourceTree = "<group>"; };
+		3F394DFC20EA0FFB0056B239 /* FillFilterRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFilterRenderTask.h; sourceTree = "<group>"; };
+		3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterLineStyleHelper.m; sourceTree = "<group>"; };
+		3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillFilterRenderTask.m; sourceTree = "<group>"; };
+		3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCompensationFilter.m; sourceTree = "<group>"; };
+		3F394E0020EA0FFE0056B239 /* FillMaskFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillMaskFilter.m; sourceTree = "<group>"; };
+		3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaskCompositeFilter.m; sourceTree = "<group>"; };
+		3F394E0220EA0FFF0056B239 /* ColorMaskFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorMaskFilter.m; sourceTree = "<group>"; };
+		3F394E0320EA0FFF0056B239 /* FillMaskFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillMaskFilter.h; sourceTree = "<group>"; };
+		3F394E0420EA0FFF0056B239 /* BaseFilterRenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFilterRenderTask.m; sourceTree = "<group>"; };
+		3F394E0520EA10000056B239 /* MaskCompositeFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskCompositeFilter.h; sourceTree = "<group>"; };
+		3F394E0620EA10000056B239 /* MaskRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskRenderTask.h; sourceTree = "<group>"; };
+		3F394E0720EA10000056B239 /* BaseFilterRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFilterRenderTask.h; sourceTree = "<group>"; };
+		3F394E0820EA10010056B239 /* ColorCompensationFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCompensationFilter.h; sourceTree = "<group>"; };
+		3F394E0920EA10010056B239 /* MaskRenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaskRenderTask.m; sourceTree = "<group>"; };
+		3F394E0A20EA10010056B239 /* GPURenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPURenderTask.h; sourceTree = "<group>"; };
+		3F394E0B20EA10020056B239 /* GPURenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPURenderTask.m; sourceTree = "<group>"; };
+		3F394E0C20EA10020056B239 /* ColorMaskFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorMaskFilter.h; sourceTree = "<group>"; };
+		3F4CA48E20F37A0C003C1FD0 /* a.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = a.mp4; sourceTree = "<group>"; };
+		3F4CA49020F37A1B003C1FD0 /* b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = b.png; sourceTree = "<group>"; };
+		3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sd1527562013_2.MP4; sourceTree = "<group>"; };
+		3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "IMG_43CCB4204EBC-1.jpeg"; sourceTree = "<group>"; };
+		3FCE3AD520E5262B005B6D17 /* GPUEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FCE3AD920E5262C005B6D17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3FCE3ADE20E5262C005B6D17 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3FCE3ADF20E5262C005B6D17 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3FCE3AE220E5262C005B6D17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3FCE3AE420E5262C005B6D17 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3FCE3AE720E5262C005B6D17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3FCE3AE920E5262C005B6D17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3FCE3AEF20E5269D005B6D17 /* GPURenderEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPURenderEngine.h; sourceTree = "<group>"; };
+		3FCE3AF020E5269D005B6D17 /* GPURenderEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPURenderEngine.m; sourceTree = "<group>"; };
+		E8328F05643C388A40C5943B /* Pods-GPUEngine.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPUEngine.release.xcconfig"; path = "Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine.release.xcconfig"; sourceTree = "<group>"; };
+		F40DE1BBF7A5D20A30ECAF3A /* Pods-GPUEngine.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GPUEngine.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3FCE3AD220E5262B005B6D17 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB8935B17F4764C5A922430C /* libPods-GPUEngine.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		141634A4B2B3448C92665F2A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3ADDA088E6AA45CDA2274F9B /* libPods-GPUEngine.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3FCE3ACC20E5262B005B6D17 = {
+			isa = PBXGroup;
+			children = (
+				3FCE3AD720E5262B005B6D17 /* GPUEngine */,
+				3FCE3AD620E5262B005B6D17 /* Products */,
+				CE63863A5A834A9FBEAB5B67 /* Pods */,
+				141634A4B2B3448C92665F2A /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3FCE3AD620E5262B005B6D17 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3FCE3AD520E5262B005B6D17 /* GPUEngine.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3FCE3AD720E5262B005B6D17 /* GPUEngine */ = {
+			isa = PBXGroup;
+			children = (
+				3F4CA48E20F37A0C003C1FD0 /* a.mp4 */,
+				3F4CA49020F37A1B003C1FD0 /* b.png */,
+				3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */,
+				3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */,
+				3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */,
+				3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */,
+				3FCE3ADE20E5262C005B6D17 /* ViewController.h */,
+				3FCE3ADF20E5262C005B6D17 /* ViewController.m */,
+				3FCE3AEF20E5269D005B6D17 /* GPURenderEngine.h */,
+				3FCE3AF020E5269D005B6D17 /* GPURenderEngine.m */,
+				3F394E0720EA10000056B239 /* BaseFilterRenderTask.h */,
+				3F394E0420EA0FFF0056B239 /* BaseFilterRenderTask.m */,
+				3F394E0820EA10010056B239 /* ColorCompensationFilter.h */,
+				3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */,
+				3F394E0C20EA10020056B239 /* ColorMaskFilter.h */,
+				3F394E0220EA0FFF0056B239 /* ColorMaskFilter.m */,
+				3F394DFC20EA0FFB0056B239 /* FillFilterRenderTask.h */,
+				3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */,
+				3F394E0320EA0FFF0056B239 /* FillMaskFilter.h */,
+				3F394E0020EA0FFE0056B239 /* FillMaskFilter.m */,
+				3F394DFB20EA0FFB0056B239 /* FilterLineStyleHelper.h */,
+				3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */,
+				3F394E0A20EA10010056B239 /* GPURenderTask.h */,
+				3F394E0B20EA10020056B239 /* GPURenderTask.m */,
+				3F394E0520EA10000056B239 /* MaskCompositeFilter.h */,
+				3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */,
+				3F394E0620EA10000056B239 /* MaskRenderTask.h */,
+				3F394E0920EA10010056B239 /* MaskRenderTask.m */,
+				3FCE3AE120E5262C005B6D17 /* Main.storyboard */,
+				3FCE3AE420E5262C005B6D17 /* Assets.xcassets */,
+				3FCE3AE620E5262C005B6D17 /* LaunchScreen.storyboard */,
+				3FCE3AE920E5262C005B6D17 /* Info.plist */,
+				3FCE3AD820E5262B005B6D17 /* Supporting Files */,
+			);
+			path = GPUEngine;
+			sourceTree = "<group>";
+		};
+		3FCE3AD820E5262B005B6D17 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3FCE3AD920E5262C005B6D17 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CE63863A5A834A9FBEAB5B67 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F40DE1BBF7A5D20A30ECAF3A /* Pods-GPUEngine.debug.xcconfig */,
+				E8328F05643C388A40C5943B /* Pods-GPUEngine.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3FCE3AD420E5262B005B6D17 /* GPUEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3FCE3AEC20E5262C005B6D17 /* Build configuration list for PBXNativeTarget "GPUEngine" */;
+			buildPhases = (
+				9ED3FD7D3896CC95585F88E5 /* [CP] Check Pods Manifest.lock */,
+				3FCE3AD120E5262B005B6D17 /* Sources */,
+				3FCE3AD220E5262B005B6D17 /* Frameworks */,
+				3FCE3AD320E5262B005B6D17 /* Resources */,
+				F211D901076200BC1858C7C3 /* [CP] Embed Pods Frameworks */,
+				73C6D2FE6FF414A3339622EC /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GPUEngine;
+			productName = GPUEngine;
+			productReference = 3FCE3AD520E5262B005B6D17 /* GPUEngine.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3FCE3ACD20E5262B005B6D17 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = com.Jeremy;
+				TargetAttributes = {
+					3FCE3AD420E5262B005B6D17 = {
+						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = JC63S7B9YZ;
+					};
+				};
+			};
+			buildConfigurationList = 3FCE3AD020E5262B005B6D17 /* Build configuration list for PBXProject "GPUEngine" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3FCE3ACC20E5262B005B6D17;
+			productRefGroup = 3FCE3AD620E5262B005B6D17 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3FCE3AD420E5262B005B6D17 /* GPUEngine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3FCE3AD320E5262B005B6D17 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FCE3AE820E5262C005B6D17 /* LaunchScreen.storyboard in Resources */,
+				3FA4E27620ECD6E700EE397D /* sd1527562013_2.MP4 in Resources */,
+				3F4CA49120F37A1B003C1FD0 /* b.png in Resources */,
+				3F4CA48F20F37A0C003C1FD0 /* a.mp4 in Resources */,
+				3FCE3AE520E5262C005B6D17 /* Assets.xcassets in Resources */,
+				3FA4E27820ECD71C00EE397D /* IMG_43CCB4204EBC-1.jpeg in Resources */,
+				3FCE3AE320E5262C005B6D17 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		73C6D2FE6FF414A3339622EC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine-resources.sh",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_amatorka.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_miss_etikate.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_1.png",
+				"${PODS_ROOT}/GPUImage/framework/Resources/lookup_soft_elegance_2.png",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_amatorka.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_miss_etikate.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_1.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/lookup_soft_elegance_2.png",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9ED3FD7D3896CC95585F88E5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GPUEngine-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F211D901076200BC1858C7C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GPUEngine/Pods-GPUEngine-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3FCE3AD120E5262B005B6D17 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3F394E1120EA10020056B239 /* MaskCompositeFilter.m in Sources */,
+				3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */,
+				3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */,
+				3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */,
+				3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */,
+				3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */,
+				3F394E1520EA10020056B239 /* GPURenderTask.m in Sources */,
+				3F394E1020EA10020056B239 /* FillMaskFilter.m in Sources */,
+				3FCE3AF120E5269D005B6D17 /* GPURenderEngine.m in Sources */,
+				3FCE3ADA20E5262C005B6D17 /* main.m in Sources */,
+				3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */,
+				3F394E1320EA10020056B239 /* BaseFilterRenderTask.m in Sources */,
+				3F394E1220EA10020056B239 /* ColorMaskFilter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3FCE3AE120E5262C005B6D17 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3FCE3AE220E5262C005B6D17 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3FCE3AE620E5262C005B6D17 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3FCE3AE720E5262C005B6D17 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3FCE3AEA20E5262C005B6D17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		3FCE3AEB20E5262C005B6D17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3FCE3AED20E5262C005B6D17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F40DE1BBF7A5D20A30ECAF3A /* Pods-GPUEngine.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JC63S7B9YZ;
+				INFOPLIST_FILE = GPUEngine/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "J-S.GPUEngine";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3FCE3AEE20E5262C005B6D17 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8328F05643C388A40C5943B /* Pods-GPUEngine.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JC63S7B9YZ;
+				INFOPLIST_FILE = GPUEngine/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "J-S.GPUEngine";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3FCE3AD020E5262B005B6D17 /* Build configuration list for PBXProject "GPUEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FCE3AEA20E5262C005B6D17 /* Debug */,
+				3FCE3AEB20E5262C005B6D17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3FCE3AEC20E5262C005B6D17 /* Build configuration list for PBXNativeTarget "GPUEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3FCE3AED20E5262C005B6D17 /* Debug */,
+				3FCE3AEE20E5262C005B6D17 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3FCE3ACD20E5262B005B6D17 /* Project object */;
+}
