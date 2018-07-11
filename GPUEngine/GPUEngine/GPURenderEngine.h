@@ -132,6 +132,13 @@
 
 
 /**
+ 填充层遮罩 -- 更新底图颜色抠图遮罩
+
+ */
+- (void)updateColorMaskTexture;
+
+
+/**
  填充层遮罩 -- 颜色镂空遮罩
  
  @param colorAndTolerance 颜色选取数据结构题
@@ -157,6 +164,14 @@
 - (void)setFillVideoSpeed:(GPUVideoSpeedType)speed;
 - (void)setFillVideoStartTime:(CMTime)startTime;
 - (void)setFillVideoEndTime:(CMTime)endTime;
+
+
+/**
+ 渲染视图
+
+ @param renderView GPUImageView
+ */
+- (void)setRenderView:(GPUImageView *)renderView;
 
 
 /**

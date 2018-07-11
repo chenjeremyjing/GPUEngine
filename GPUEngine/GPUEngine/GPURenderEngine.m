@@ -49,12 +49,13 @@ static GPURenderEngine *engine = nil;
 - (void)updateBaseResourceWithImage:(UIImage *)baseImage
 {
     self.baseRenderTask.baseTexture = [[GPUImagePicture alloc] initWithImage:baseImage];
+    self.maskRenderTask.colorMaskTexture = self.baseRenderTask.colorMaskfilter;
     [self processAll];
 }
 
 - (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
-    
+    self.baseRenderTask.filterStyle = filterStyle;
 }
 
 - (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
@@ -99,7 +100,7 @@ static GPURenderEngine *engine = nil;
 
 - (void)updateFillFilterLineStyleWithFilterLine:(FilterLineStyleType)filterStyle
 {
-    
+    self.fillRendereTask.filterStyle = filterStyle;
 }
 - (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
 {
@@ -130,7 +131,14 @@ static GPURenderEngine *engine = nil;
 //遮罩橡皮擦
 - (void)updateEraserMaskWithEraserRawData:(GLubyte *)eraserRawData
 {
-    self.maskRenderTask.eraserMaskTexture = [[GPUImageRawDataInput alloc] initWithBytes:eraserRawData size:CGSizeMake(100, 100)];
+    if (!self.maskRenderTask.eraserMaskTexture) {
+        self.maskRenderTask.eraserMaskTexture = [[GPUImageRawDataInput alloc] initWithBytes:eraserRawData size:panelSize];
+    }
+    else
+    {
+        [self.maskRenderTask.eraserMaskTexture updateDataFromBytes:eraserRawData size:panelSize];
+    }
+    
     [self processAll];
 }
 
@@ -183,7 +191,11 @@ static GPURenderEngine *engine = nil;
     [self.maskRenderTask processAll];
 }
 
-
+- (void)setRenderView:(GPUImageView *)renderView
+{
+    [self.blendFilter addTarget:renderView];
+    [self processAll];
+}
 
 @end
 

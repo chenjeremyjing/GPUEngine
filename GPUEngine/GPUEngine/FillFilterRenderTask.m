@@ -72,7 +72,7 @@
 }
 
 - (void)seekToTime:(CMTime)time {
-    [self.player seekToTime:time toleranceBefore:CMTimeMake(0, 0) toleranceAfter:CMTimeMake(0, 0) completionHandler:^(BOOL finished) {
+    [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
         if (finished) {
             [self.player play];
         }
@@ -120,7 +120,7 @@
 
 - (FilterLineStyleHelper *)filterLinerStyleHelper {
     if (!_filterLinerStyleHelper) {
-        _filterLinerStyleHelper = [[FilterLineStyleHelper alloc] init];
+        _filterLinerStyleHelper = [FilterLineStyleHelper filterLineWithStyle:FilterLineCartoonStyleType];
         
     }
     return _filterLinerStyleHelper;

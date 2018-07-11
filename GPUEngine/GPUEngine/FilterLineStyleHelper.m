@@ -33,7 +33,6 @@
 {
     FilterLineStyleHelper *filterStyleHelper = [[FilterLineStyleHelper alloc] init];
     filterStyleHelper.filterStyle = FilterLineCityStyleType;
-    filterStyleHelper.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
     return filterStyleHelper;
 }
 
@@ -46,7 +45,7 @@
         __weak typeof (self)weakSelf = self;
         [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
             if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
-                [weakSelf.player seekToTime:CMTimeMake(0, 0)];
+                [weakSelf.player seekToTime:kCMTimeZero];
                 [weakSelf.player play];
             }
         }];
@@ -62,13 +61,15 @@
             //风格滤镜脸所需滤镜
             GPUImageSaturationFilter *saturationfilter = [[GPUImageSaturationFilter alloc] init];
             GPUImageContrastFilter *contrastfilter = [[GPUImageContrastFilter alloc] init];
+            self.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
+
             [saturationfilter addTarget:contrastfilter];
             
             //动态视频混合滤镜
             self.animationBlendFilter = [[GPUImageNormalBlendFilter alloc]init];
             [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
             
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL URLWithString:@""]];
+            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]]];
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;
@@ -79,12 +80,13 @@
             break;
         case FilterLineCityStyleType:
         {
+            self.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
             GPUImageSaturationFilter *saturationfilter = [[GPUImageSaturationFilter alloc] init];
             GPUImageContrastFilter *contrastfilter = [[GPUImageContrastFilter alloc] init];
             self.animationBlendFilter = [[GPUImageNormalBlendFilter alloc]init];
             [saturationfilter addTarget:contrastfilter];
             [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL URLWithString:@""]];
+            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]]];
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;

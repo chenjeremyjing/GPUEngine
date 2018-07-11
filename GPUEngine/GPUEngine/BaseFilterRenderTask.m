@@ -69,12 +69,17 @@
 
 - (void)setMaskColor:(render_color)maskColor{
     _maskColor = maskColor;
-//    self.colorMaskfilter
+    self.colorMaskfilter.r = maskColor.r;
+    self.colorMaskfilter.g = maskColor.g;
+    self.colorMaskfilter.b = maskColor.b;
+    self.colorMaskfilter.offset = maskColor.offset;
 }
 
 - (void)setFilterStyle:(FilterLineStyleType)filterStyle {
     _filterStyle = filterStyle;
+    [self.baseTransFilter removeTarget:self.filterLinerStyleHelper.prefixFilter];
     self.filterLinerStyleHelper.filterStyle = filterStyle;
+    [self.baseTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
 }
 
 @end

@@ -33,6 +33,20 @@
 
 #pragma mark -- Setter && Getter
 
+- (GPUImageTransformFilter *)textTransFilter {
+    if (!_textTransFilter) {
+        _textTransFilter = [[GPUImageTransformFilter alloc] init];
+    }
+    return _textTransFilter;
+}
+
+- (MaskCompositeFilter *)compositeFilter {
+    if (!_compositeFilter) {
+        _compositeFilter = [[MaskCompositeFilter alloc] init];
+    }
+    return _compositeFilter;
+}
+
 - (void)setTextMaskTexture:(GPUImagePicture *)textMaskTexture {
     [_textMaskTexture removeAllTargets];
     
@@ -50,8 +64,8 @@
 }
 
 - (void)setColorMaskTexture:(GPUImageOutput *)colorMaskTexture {
-    [_colorMaskTexture removeAllTargets];
     
+    [_colorMaskTexture removeAllTargets];
     _colorMaskTexture = colorMaskTexture;
     [_colorMaskTexture addTarget:self.compositeFilter atTextureLocation:colorMaskTextureLocation];
 }

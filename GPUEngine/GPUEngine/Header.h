@@ -10,6 +10,8 @@
 #ifndef Header_h
 #define Header_h
 
+#define panelSize [UIScreen mainScreen].bounds.size
+
 typedef void(^processingBlock)(CGFloat progress);
 typedef  enum GPUVideoSpeedType{
     GPUVideoSpeedNormalType,

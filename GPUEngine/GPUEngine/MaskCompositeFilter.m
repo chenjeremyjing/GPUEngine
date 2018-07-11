@@ -37,27 +37,29 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
      }
      if (textMaskHidden == 1.0)
      {
-         textMaskHidden.a = 0.0;
+         textMask.a = 0.0;
      }
      if (colorMaskHidden == 1.0)
      {
          colorMask.a = 0.0;
      }
      
-     if (eraserMask.a == 0.0 && textMask.a == 0.0 && colorMask.a == 0.0)
+//     if (eraserMask.a == 0.0 && textMask.a == 0.0 && colorMask.a == 0.0)
+//     {
+//         resultColor.a = 0.0;
+//     }
+//     else
+//     {
+     resultColor.a = eraserMask.a;
+     if (textMask.a < resultColor.a)
      {
-         resultColor.a = 0.0;
-     } else {
-         resultColor.a = eraserMask.a;
-         if (textMask.a > resultColor.a)
-         {
-             resultColor.a = textMask.a;
-         }
-         if (colorMask.a > resultColor.a)
-         {
-             resultColor.a = colorMask.a;
-         }
+         resultColor.a = textMask.a;
      }
+     if (colorMask.a < resultColor.a)
+     {
+         resultColor.a = colorMask.a;
+     }
+//     }
      
      gl_FragColor = resultColor;
  }
