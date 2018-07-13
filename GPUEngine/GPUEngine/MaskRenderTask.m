@@ -31,6 +31,11 @@
     [self.compositeFilter addTarget:target];
 }
 
+- (void)processAll {
+    [self.textMaskTexture processImage];
+    [self.eraserMaskTexture processData];
+}
+
 #pragma mark -- Setter && Getter
 
 - (GPUImageTransformFilter *)textTransFilter {

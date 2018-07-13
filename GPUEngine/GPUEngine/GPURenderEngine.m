@@ -20,9 +20,11 @@
 
 @property (nonatomic, strong) MaskRenderTask *maskRenderTask;
 
-@property (nonatomic, strong) GPUImageNormalBlendFilter *blendFilter;
+@property (nonatomic, strong) GPUImageTwoInputFilter *blendFilter;
 
 @property (nonatomic, strong) FillMaskFilter *maskFilter;
+
+@property (nonatomic, strong) GPUImageView *gView;
 
 
 @end
@@ -39,7 +41,7 @@ static GPURenderEngine *engine = nil;
         engine.fillRendereTask = [[FillFilterRenderTask alloc] init];
         engine.maskRenderTask = [[MaskRenderTask alloc] init];
         engine.maskFilter = [[FillMaskFilter alloc] init];
-        engine.blendFilter = [[GPUImageNormalBlendFilter alloc] init];
+        engine.blendFilter = [[GPUImageMultiplyBlendFilter alloc] init];
     });
     return engine;
 }
@@ -146,6 +148,7 @@ static GPURenderEngine *engine = nil;
 - (void)updateColorMaskColorAndTolerance:(render_color)colorAndTolerance
 {
     self.baseRenderTask.maskColor = colorAndTolerance;
+    
 }
 - (void)setMaskAndFillHidden:(BOOL)isHidden
 {
@@ -174,27 +177,43 @@ static GPURenderEngine *engine = nil;
 - (void)processAll
 {
     
-    if (!self.fillRendereTask.fillTexture
-        || !self.baseRenderTask.baseTexture
-        || !self.maskRenderTask.eraserMaskTexture
-        || !self.maskRenderTask.textMaskTexture
-        || !self.maskRenderTask.colorMaskTexture) {
-        return;
+//    if (!self.fillRendereTask.fillTexture
+//        || !self.baseRenderTask.baseTexture
+//        || !self.maskRenderTask.eraserMaskTexture
+//        || !self.maskRenderTask.textMaskTexture
+//        || !self.maskRenderTask.colorMaskTexture) {
+//        return;
+//    }
+    
+//    [self.fillRendereTask addTarget:self.maskFilter];
+//    [self.maskRenderTask addTarget:self.maskFilter];
+//    [self.baseRenderTask addTarget:self.blendFilter];
+    [self.maskFilter addTarget:self.gView];
+//    [self.blendFilter addTarget:self.gView];
+
+//    [self.fillRendereTask addTarget:self.blendFilter];
+//    [self.baseRenderTask addTarget:self.blendFilter];
+//    [self.blendFilter addTarget:self.gView];
+    
+//    [self.fillRendereTask processAll];
+
+    if ([self.fillRendereTask.fillTexture isKindOfClass:[GPUImageMovie class]]) {
+        GPUImageMovie *movie = (GPUImageMovie *)self.fillRendereTask.fillTexture;
+        movie.renderFrameBlock = ^{
+            [self.baseRenderTask processAll];
+            [self.maskRenderTask processAll];
+        };
+    } else {
+        [self.baseRenderTask processAll];
+        [self.maskRenderTask processAll];
     }
     
-    [self.fillRendereTask addTarget:self.maskFilter];
-    [self.maskRenderTask addTarget:self.maskFilter];
-    [self.baseRenderTask addTarget:self.blendFilter];
-    [self.maskFilter addTarget:self.blendFilter];
-    [self.baseRenderTask processAll];
-    [self.fillRendereTask processAll];
-    [self.maskRenderTask processAll];
+    
 }
 
 - (void)setRenderView:(GPUImageView *)renderView
 {
-    [self.blendFilter addTarget:renderView];
-    [self processAll];
+    self.gView = renderView;
 }
 
 @end

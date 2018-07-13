@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "GPUImage.h"
 #import "GPURenderEngine.h"
+#import "ColorMaskFilter.h"
+#import "MaskCompositeFilter.h"
 
 typedef NS_ENUM(NSInteger, currentTarget)
 {
@@ -39,7 +41,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 @property (nonatomic, strong) AVPlayerItem *playerItem;
 
-@property (nonatomic, strong) GPUImageAlphaBlendFilter *blendFilter;
+@property (nonatomic, strong) GPUImageTwoInputFilter *blendFilter;
 
 @property (nonatomic, assign) CGPoint lastPoint;
 
@@ -63,6 +65,8 @@ typedef NS_ENUM(NSInteger, currentTarget)
     // Do any additional setup after loading the view, typically from a nib.
     [self resetEraseData];
     
+    self.view.backgroundColor = [UIColor greenColor];
+    
     [[UIButton appearance] setBackgroundColor:[UIColor lightGrayColor]];
     
     self.editTarget = 0;
@@ -78,6 +82,8 @@ typedef NS_ENUM(NSInteger, currentTarget)
 {
     gView = [[GPUImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
     gView.fillMode = kGPUImageFillModeStretch;
+    gView.backgroundColor = [UIColor clearColor];
+    gView.opaque = NO;
     [self.view addSubview:gView];
     
     UIPanGestureRecognizer *panGes = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
@@ -279,38 +285,63 @@ typedef NS_ENUM(NSInteger, currentTarget)
 - (void)setupFilters {
     
     NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]];
+    
+    
+    ColorMaskFilter *ColorMask = [[ColorMaskFilter alloc] init];
+    ColorMask.r = 0.1;
+    ColorMask.g = 0.1;
+    ColorMask.b = 0.1;
+    ColorMask.offset = 0.1;
+    
+    GPUImagePicture *mask1 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
+//    GPUImageRawDataInput *mask2 = [[GPUImageRawDataInput alloc] initWithBytes:self.eraseData size:panelSize pixelFormat:GPUPixelFormatRGBA type:GPUPixelTypeUByte];
+    GPUImagePicture *mask2 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
+    GPUImagePicture *mask3 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
+    MaskCompositeFilter *MaskComposite = [[MaskCompositeFilter alloc] init];
+    
+    [mask1 addTarget:MaskComposite];
+    [mask2 addTarget:MaskComposite];
+    [mask3 addTarget:MaskComposite];
+//    [ColorMask addTarget:MaskComposite];
 
+    [MaskComposite addTarget:gView];
     
-    GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
-    //base
-    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"b"]];
-    //fill
-    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
+//    [mask2 processData];
+    [mask1 processImage];
+    [mask2 processImage];
+    [mask3 processImage];
 
-    //textMask
-    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b2"]];
-    
-    //eraserMask
-    [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
-    
-    render_color maskColor = {
-        0.1,
-        0.1,
-        0.1,
-        0.1
-    };
-    //baseColorSelectMask
-    [renderEngine updateColorMaskColorAndTolerance:maskColor];
-    
-    [renderEngine setRenderView:gView];
+//    GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
+//    [renderEngine setRenderView:gView];
+//    render_color maskColor = {
+//        0.1,
+//        0.1,
+//        0.1,
+//        0.1
+//    };
+//    //baseColorSelectMask
+//    [renderEngine updateColorMaskColorAndTolerance:maskColor];
+//    //base
+//    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"b"]];
+//    //fill
+////    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
+//
+//    //textMask
+//    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b2"]];
+//
+//    //eraserMask
+//    [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
+//
+//
+//
     
 //    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
 //
 //    self.baseTrans = [[GPUImageTransformFilter alloc] init];
 //    self.baseTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
 //
-//    self.blendFilter = [[GPUImageAlphaBlendFilter alloc] init];
-//    self.blendFilter.mix = 0.5;
+//    self.blendFilter = [[GPUImageMultiplyBlendFilter alloc] init];
+////    self.blendFilter.mix = 0.5;
 //
 //
 //    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
@@ -347,8 +378,8 @@ typedef NS_ENUM(NSInteger, currentTarget)
 //
 //    [pic addTarget:self.baseTrans];
 //    [movie addTarget:self.FillTrans];
-//    [self.FillTrans addTarget:self.blendFilter atTextureLocation:0];
-//    [self.baseTrans addTarget:self.blendFilter atTextureLocation:1];
+//    [self.baseTrans addTarget:self.blendFilter atTextureLocation:0];
+//    [self.FillTrans addTarget:self.blendFilter atTextureLocation:1];
 //
 //    [pic processImage];
 //
@@ -500,7 +531,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
     CGContextFillRect(context, CGRectMake(0, 0, panelSize.width, panelSize.height));
     CGContextTranslateCTM(context, 0, panelSize.height);
     CGContextScaleCTM(context, 1.0f, -1.0f);
-    
+
     CGContextRelease(context);
 }
 

@@ -132,10 +132,14 @@
         _player.volume = 0;
         __weak typeof (self)weakSelf = self;
         [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
-                [weakSelf.player seekToTime:weakSelf.startTime];
+            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
+                [weakSelf.player seekToTime:kCMTimeZero];
                 [weakSelf.player play];
             }
+//            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
+//                [weakSelf.player seekToTime:weakSelf.startTime];
+//                [weakSelf.player play];
+//            }
         }];
     }
     return _player;

@@ -75,7 +75,7 @@
             self.firstAdjustFilter = saturationfilter;
             self.secondAdjustFilter = contrastfilter;
             self.prefixFilter = saturationfilter;
-            self.secondAdjustFilter = contrastfilter;
+            self.sufixFilter = contrastfilter;
         }
             break;
         case FilterLineCityStyleType:
@@ -92,7 +92,7 @@
             self.firstAdjustFilter = saturationfilter;
             self.secondAdjustFilter = contrastfilter;
             self.prefixFilter = saturationfilter;
-            self.secondAdjustFilter = contrastfilter;
+            self.sufixFilter = contrastfilter;
 
         }
             break;
@@ -126,9 +126,9 @@
     _compensationAlpha = compensationAlpha;
 }
 
-- (GPUImageFilter *)sufixFilter {
-    return self.colorCompensationFilter;
-}
+//- (GPUImageFilter *)sufixFilter {
+//    return self.colorCompensationFilter;
+//}
 
 
 

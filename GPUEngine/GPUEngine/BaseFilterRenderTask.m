@@ -53,13 +53,15 @@
     _baseTexture = baseTexture;
     
     //底图移动滤镜
-    [baseTexture addTarget:self.baseTransFilter];
+    [_baseTexture addTarget:self.baseTransFilter];
+    
+    self.baseTransFilter.transform3D = CATransform3DIdentity;
     
     //底图滤镜风格
     [self.baseTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
     
     //底图颜色抠图轮廓滤镜
-    [baseTexture addTarget:self.colorMaskfilter];
+    [self.baseTransFilter addTarget:self.colorMaskfilter];
 }
 
 - (void)setBaseTransform:(CATransform3D)baseTransform {
@@ -80,6 +82,10 @@
     [self.baseTransFilter removeTarget:self.filterLinerStyleHelper.prefixFilter];
     self.filterLinerStyleHelper.filterStyle = filterStyle;
     [self.baseTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
+}
+
+- (void)processAll {
+    [self.baseTexture processImage];
 }
 
 @end
