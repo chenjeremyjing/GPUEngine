@@ -33,6 +33,14 @@
 
 
 /**
+ 底图移动变形
+
+ @param transform transform
+ */
+- (void)updateBaseWithTransform:(CATransform3D)transform;
+
+
+/**
  切换底图滤镜风格
  
  @param filterStyle 滤镜风格枚举
@@ -68,9 +76,11 @@
  @param oneFilter 风格滤镜链可调滤镜1
  @param anotherFilter 风格滤镜链可调滤镜2
  */
-- (void)updateFillFilterLineStyleWithFilterLine:(FilterLineStyleType)filterStyle;
+- (void)updateFillFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle;
 - (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue;
 - (void)updateFillFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue;
+
+- (void)seekToTime:(CMTime)time;
 
 
 /**

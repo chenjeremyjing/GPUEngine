@@ -24,14 +24,18 @@ NSString *const kGPUImageMaskBlendFragmentShaderString = SHADER_STRING
      lowp vec4 fillColor = texture2D(inputImageTexture, textureCoordinate);
      lowp vec4 maskColor = texture2D(inputImageTexture2, textureCoordinate2);
      
-     lowp vec4 resultColor = fillColor;
-     
-     resultColor.a = 1.0 - maskColor.a;
-     
+     lowp vec4 resultColor = fillColor * (1.0 - maskColor.a);
+          
      if (eraserHighlight == 1.0)
      {
-         lowp vec4 highlightColor = vec4(0.5);
-         resultColor = highlightColor;
+         if (maskColor.a > 0.0)
+         {
+             lowp vec4 highlightColor = vec4(1.0,0.0,0.0,1.0);
+             resultColor = highlightColor;
+         } else {
+             resultColor = vec4(0.0);
+         }
+         
      }
      
      gl_FragColor = resultColor;

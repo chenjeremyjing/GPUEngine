@@ -55,9 +55,15 @@ static GPURenderEngine *engine = nil;
     [self processAll];
 }
 
+- (void)updateBaseWithTransform:(CATransform3D)transform
+{
+    self.baseRenderTask.baseTransform = transform;
+}
+
 - (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
     self.baseRenderTask.filterStyle = filterStyle;
+    [self processAll];
 }
 
 - (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
@@ -100,9 +106,10 @@ static GPURenderEngine *engine = nil;
     self.fillRendereTask.compensationAlpha = alpha;
 }
 
-- (void)updateFillFilterLineStyleWithFilterLine:(FilterLineStyleType)filterStyle
+- (void)updateFillFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
     self.fillRendereTask.filterStyle = filterStyle;
+    [self processAll];
 }
 - (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
 {
@@ -111,6 +118,11 @@ static GPURenderEngine *engine = nil;
 - (void)updateFillFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue
 {
     
+}
+
+- (void)seekToTime:(CMTime)time
+{
+    [self.fillRendereTask seekToTime:time];
 }
 
 //遮罩 文字
@@ -152,9 +164,14 @@ static GPURenderEngine *engine = nil;
 }
 - (void)setMaskAndFillHidden:(BOOL)isHidden
 {
+//    self.maskRenderTask.eraserMaskHidden = isHidden;
+//    self.maskRenderTask.textMaskHidden = isHidden;
+//    self.maskRenderTask.colorMaskHidden = !isHidden;
+//    self.maskFilter.eraserHighlight = isHidden;
     self.maskRenderTask.eraserMaskHidden = YES;
-    self.maskRenderTask.textMaskHidden = YES;
-    self.maskRenderTask.colorMaskHidden = NO;
+    self.maskRenderTask.textMaskHidden = NO;
+    self.maskRenderTask.colorMaskHidden = YES;
+    self.maskFilter.eraserHighlight = isHidden;
 }
 
 - (void)setFillVideoSpeed:(GPUVideoSpeedType)speed
@@ -177,37 +194,43 @@ static GPURenderEngine *engine = nil;
 - (void)processAll
 {
     
-//    if (!self.fillRendereTask.fillTexture
-//        || !self.baseRenderTask.baseTexture
-//        || !self.maskRenderTask.eraserMaskTexture
-//        || !self.maskRenderTask.textMaskTexture
-//        || !self.maskRenderTask.colorMaskTexture) {
-//        return;
-//    }
-    
-//    [self.fillRendereTask addTarget:self.maskFilter];
-//    [self.maskRenderTask addTarget:self.maskFilter];
-//    [self.baseRenderTask addTarget:self.blendFilter];
-    [self.maskFilter addTarget:self.gView];
-//    [self.blendFilter addTarget:self.gView];
-
-//    [self.fillRendereTask addTarget:self.blendFilter];
-//    [self.baseRenderTask addTarget:self.blendFilter];
-//    [self.blendFilter addTarget:self.gView];
-    
-//    [self.fillRendereTask processAll];
-
-    if ([self.fillRendereTask.fillTexture isKindOfClass:[GPUImageMovie class]]) {
-        GPUImageMovie *movie = (GPUImageMovie *)self.fillRendereTask.fillTexture;
-        movie.renderFrameBlock = ^{
-            [self.baseRenderTask processAll];
-            [self.maskRenderTask processAll];
-        };
-    } else {
-        [self.baseRenderTask processAll];
-        [self.maskRenderTask processAll];
+    if (!self.fillRendereTask.fillTexture
+        || !self.baseRenderTask.baseTexture
+        || !self.maskRenderTask.eraserMaskTexture
+        || !self.maskRenderTask.textMaskTexture
+        || !self.maskRenderTask.colorMaskTexture) {
+        return;
     }
     
+    [self.fillRendereTask addTarget:self.maskFilter];
+    [self.maskRenderTask addTarget:self.maskFilter];
+    [self.baseRenderTask addTarget:self.blendFilter];
+    [self.maskFilter addTarget:self.blendFilter];
+    [self.blendFilter addTarget:self.gView];
+
+    if (self.fillRendereTask.hasAnimationVideo) {
+        [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+            [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
+                
+            }];
+            [self.maskRenderTask processAllWithRenderBlock:nil];
+        }];
+    } else
+    {
+        if (self.baseRenderTask.hasAnimationVideo) {
+            [self.baseRenderTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+                [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+                    
+                }];
+                [self.maskRenderTask processAllWithRenderBlock:nil];
+            }];
+        } else
+        {
+            [self.baseRenderTask processAllWithRenderBlock:nil];
+            [self.fillRendereTask processAllWithRenderBlock:nil];
+            [self.maskRenderTask processAllWithRenderBlock:nil];
+        }
+    }
     
 }
 

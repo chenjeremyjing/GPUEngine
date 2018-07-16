@@ -9,13 +9,17 @@
 #import <Foundation/Foundation.h>
 #import "GPUImage.h"
 
+typedef void(^RenderBlock)(BOOL hasAnimationVideo);
+
 @interface GPURenderTask : NSObject
+
+@property (nonatomic, assign) BOOL hasAnimationVideo;
 
 - (void)addTarget:(id<GPUImageInput>)target;
 
 - (void)removeAllTarget;
 
-- (void)processAll;
+- (void)processAllWithRenderBlock:(RenderBlock)renderBlock;
 
 
 @end

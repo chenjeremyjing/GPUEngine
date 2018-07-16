@@ -20,7 +20,7 @@
     
 }
 
-- (void)processAll
+- (void)processAllWithRenderBlock:(RenderBlock)renderBlock
 {
     
 }

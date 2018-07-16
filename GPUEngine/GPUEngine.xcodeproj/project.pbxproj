@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F26A2FA20FC3949003A39BE /* NUMAMultiplyBlendFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */; };
 		3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */; };
 		3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */; };
 		3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */; };
 		3F394E1020EA10020056B239 /* FillMaskFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0020EA0FFE0056B239 /* FillMaskFilter.m */; };
-		3F394E1120EA10020056B239 /* MaskCompositeFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */; };
+		3F394E1120EA10020056B239 /* MaskMixFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0120EA0FFE0056B239 /* MaskMixFilter.m */; };
 		3F394E1220EA10020056B239 /* ColorMaskFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0220EA0FFF0056B239 /* ColorMaskFilter.m */; };
 		3F394E1320EA10020056B239 /* BaseFilterRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0420EA0FFF0056B239 /* BaseFilterRenderTask.m */; };
 		3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0920EA10010056B239 /* MaskRenderTask.m */; };
 		3F394E1520EA10020056B239 /* GPURenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394E0B20EA10020056B239 /* GPURenderTask.m */; };
-		3F4CA48F20F37A0C003C1FD0 /* a.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA48E20F37A0C003C1FD0 /* a.mp4 */; };
-		3F4CA49120F37A1B003C1FD0 /* b.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA49020F37A1B003C1FD0 /* b.png */; };
 		3F4CA4AE20F4D3B9003C1FD0 /* a1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA49320F4D3B9003C1FD0 /* a1.jpg */; };
 		3F4CA4AF20F4D3B9003C1FD0 /* a10.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA49420F4D3B9003C1FD0 /* a10.jpg */; };
 		3F4CA4B020F4D3B9003C1FD0 /* a11.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA49520F4D3B9003C1FD0 /* a11.jpg */; };
@@ -46,13 +45,11 @@
 		3F4CA4C720F4D3B9003C1FD0 /* shuoming1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4AC20F4D3B9003C1FD0 /* shuoming1.jpg */; };
 		3F4CA4C820F4D3B9003C1FD0 /* shuoming2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4AD20F4D3B9003C1FD0 /* shuoming2.jpg */; };
 		3F4CA4D620F8A83B003C1FD0 /* 完整作品.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4D320F8A83B003C1FD0 /* 完整作品.mp4 */; };
-		3F4CA4D720F8A83B003C1FD0 /* 背景素材.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4D420F8A83B003C1FD0 /* 背景素材.png */; };
-		3F4CA4D820F8A83B003C1FD0 /* 背景风格动态素材.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4D520F8A83B003C1FD0 /* 背景风格动态素材.mp4 */; };
-		3F4CA4DD20F8A847003C1FD0 /* 动态纹理视频素材.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DA20F8A846003C1FD0 /* 动态纹理视频素材.mp4 */; };
-		3F4CA4DE20F8A847003C1FD0 /* 填充素材.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DB20F8A846003C1FD0 /* 填充素材.png */; };
+		3F4CA4D720F8A83B003C1FD0 /* base.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4D420F8A83B003C1FD0 /* base.png */; };
+		3F4CA4D820F8A83B003C1FD0 /* baseV.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4D520F8A83B003C1FD0 /* baseV.mp4 */; };
+		3F4CA4DD20F8A847003C1FD0 /* fillV.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DA20F8A846003C1FD0 /* fillV.mp4 */; };
+		3F4CA4DE20F8A847003C1FD0 /* fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DB20F8A846003C1FD0 /* fill.png */; };
 		3F4CA4DF20F8A847003C1FD0 /* 效果.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */; };
-		3FA4E27620ECD6E700EE397D /* sd1527562013_2.MP4 in Resources */ = {isa = PBXBuildFile; fileRef = 3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */; };
-		3FA4E27820ECD71C00EE397D /* IMG_43CCB4204EBC-1.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */; };
 		3FCE3ADA20E5262C005B6D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3AD920E5262C005B6D17 /* main.m */; };
 		3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */; };
 		3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADF20E5262C005B6D17 /* ViewController.m */; };
@@ -65,17 +62,19 @@
 
 /* Begin PBXFileReference section */
 		3ADDA088E6AA45CDA2274F9B /* libPods-GPUEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GPUEngine.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3F26A2F820FC3949003A39BE /* NUMAMultiplyBlendFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAMultiplyBlendFilter.h; sourceTree = "<group>"; };
+		3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAMultiplyBlendFilter.m; sourceTree = "<group>"; };
 		3F394DFB20EA0FFB0056B239 /* FilterLineStyleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterLineStyleHelper.h; sourceTree = "<group>"; };
 		3F394DFC20EA0FFB0056B239 /* FillFilterRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFilterRenderTask.h; sourceTree = "<group>"; };
 		3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterLineStyleHelper.m; sourceTree = "<group>"; };
 		3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillFilterRenderTask.m; sourceTree = "<group>"; };
 		3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorCompensationFilter.m; sourceTree = "<group>"; };
 		3F394E0020EA0FFE0056B239 /* FillMaskFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillMaskFilter.m; sourceTree = "<group>"; };
-		3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaskCompositeFilter.m; sourceTree = "<group>"; };
+		3F394E0120EA0FFE0056B239 /* MaskMixFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MaskMixFilter.m; sourceTree = "<group>"; };
 		3F394E0220EA0FFF0056B239 /* ColorMaskFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorMaskFilter.m; sourceTree = "<group>"; };
 		3F394E0320EA0FFF0056B239 /* FillMaskFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillMaskFilter.h; sourceTree = "<group>"; };
 		3F394E0420EA0FFF0056B239 /* BaseFilterRenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFilterRenderTask.m; sourceTree = "<group>"; };
-		3F394E0520EA10000056B239 /* MaskCompositeFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskCompositeFilter.h; sourceTree = "<group>"; };
+		3F394E0520EA10000056B239 /* MaskMixFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskMixFilter.h; sourceTree = "<group>"; };
 		3F394E0620EA10000056B239 /* MaskRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MaskRenderTask.h; sourceTree = "<group>"; };
 		3F394E0720EA10000056B239 /* BaseFilterRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFilterRenderTask.h; sourceTree = "<group>"; };
 		3F394E0820EA10010056B239 /* ColorCompensationFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorCompensationFilter.h; sourceTree = "<group>"; };
@@ -83,8 +82,6 @@
 		3F394E0A20EA10010056B239 /* GPURenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPURenderTask.h; sourceTree = "<group>"; };
 		3F394E0B20EA10020056B239 /* GPURenderTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPURenderTask.m; sourceTree = "<group>"; };
 		3F394E0C20EA10020056B239 /* ColorMaskFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorMaskFilter.h; sourceTree = "<group>"; };
-		3F4CA48E20F37A0C003C1FD0 /* a.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = a.mp4; sourceTree = "<group>"; };
-		3F4CA49020F37A1B003C1FD0 /* b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = b.png; sourceTree = "<group>"; };
 		3F4CA49320F4D3B9003C1FD0 /* a1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = a1.jpg; sourceTree = "<group>"; };
 		3F4CA49420F4D3B9003C1FD0 /* a10.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = a10.jpg; sourceTree = "<group>"; };
 		3F4CA49520F4D3B9003C1FD0 /* a11.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = a11.jpg; sourceTree = "<group>"; };
@@ -113,13 +110,11 @@
 		3F4CA4AC20F4D3B9003C1FD0 /* shuoming1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shuoming1.jpg; sourceTree = "<group>"; };
 		3F4CA4AD20F4D3B9003C1FD0 /* shuoming2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = shuoming2.jpg; sourceTree = "<group>"; };
 		3F4CA4D320F8A83B003C1FD0 /* 完整作品.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "完整作品.mp4"; sourceTree = "<group>"; };
-		3F4CA4D420F8A83B003C1FD0 /* 背景素材.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景素材.png"; sourceTree = "<group>"; };
-		3F4CA4D520F8A83B003C1FD0 /* 背景风格动态素材.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "背景风格动态素材.mp4"; sourceTree = "<group>"; };
-		3F4CA4DA20F8A846003C1FD0 /* 动态纹理视频素材.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "动态纹理视频素材.mp4"; sourceTree = "<group>"; };
-		3F4CA4DB20F8A846003C1FD0 /* 填充素材.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "填充素材.png"; sourceTree = "<group>"; };
+		3F4CA4D420F8A83B003C1FD0 /* base.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = base.png; sourceTree = "<group>"; };
+		3F4CA4D520F8A83B003C1FD0 /* baseV.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = baseV.mp4; sourceTree = "<group>"; };
+		3F4CA4DA20F8A846003C1FD0 /* fillV.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = fillV.mp4; sourceTree = "<group>"; };
+		3F4CA4DB20F8A846003C1FD0 /* fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fill.png; sourceTree = "<group>"; };
 		3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "效果.mp4"; sourceTree = "<group>"; };
-		3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sd1527562013_2.MP4; sourceTree = "<group>"; };
-		3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "IMG_43CCB4204EBC-1.jpeg"; sourceTree = "<group>"; };
 		3FCE3AD520E5262B005B6D17 /* GPUEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FCE3AD920E5262C005B6D17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -197,8 +192,8 @@
 			isa = PBXGroup;
 			children = (
 				3F4CA4D320F8A83B003C1FD0 /* 完整作品.mp4 */,
-				3F4CA4D420F8A83B003C1FD0 /* 背景素材.png */,
-				3F4CA4D520F8A83B003C1FD0 /* 背景风格动态素材.mp4 */,
+				3F4CA4D420F8A83B003C1FD0 /* base.png */,
+				3F4CA4D520F8A83B003C1FD0 /* baseV.mp4 */,
 			);
 			path = "完整作品";
 			sourceTree = "<group>";
@@ -206,8 +201,8 @@
 		3F4CA4D920F8A846003C1FD0 /* 正片叠底 */ = {
 			isa = PBXGroup;
 			children = (
-				3F4CA4DA20F8A846003C1FD0 /* 动态纹理视频素材.mp4 */,
-				3F4CA4DB20F8A846003C1FD0 /* 填充素材.png */,
+				3F4CA4DA20F8A846003C1FD0 /* fillV.mp4 */,
+				3F4CA4DB20F8A846003C1FD0 /* fill.png */,
 				3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */,
 			);
 			path = "正片叠底";
@@ -235,11 +230,9 @@
 			isa = PBXGroup;
 			children = (
 				3F4CA49220F4D3B9003C1FD0 /* 1510611252017091210art38771 */,
-				3F4CA48E20F37A0C003C1FD0 /* a.mp4 */,
-				3F4CA49020F37A1B003C1FD0 /* b.png */,
-				3FA4E27520ECD6E700EE397D /* sd1527562013_2.MP4 */,
-				3FA4E27720ECD71B00EE397D /* IMG_43CCB4204EBC-1.jpeg */,
 				3FCE3D7520F4F420005B6D17 /* Header.h */,
+				3F26A2F820FC3949003A39BE /* NUMAMultiplyBlendFilter.h */,
+				3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */,
 				3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */,
 				3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */,
 				3FCE3ADE20E5262C005B6D17 /* ViewController.h */,
@@ -260,8 +253,8 @@
 				3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */,
 				3F394E0A20EA10010056B239 /* GPURenderTask.h */,
 				3F394E0B20EA10020056B239 /* GPURenderTask.m */,
-				3F394E0520EA10000056B239 /* MaskCompositeFilter.h */,
-				3F394E0120EA0FFE0056B239 /* MaskCompositeFilter.m */,
+				3F394E0520EA10000056B239 /* MaskMixFilter.h */,
+				3F394E0120EA0FFE0056B239 /* MaskMixFilter.m */,
 				3F394E0620EA10000056B239 /* MaskRenderTask.h */,
 				3F394E0920EA10010056B239 /* MaskRenderTask.m */,
 				3FCE3AE120E5262C005B6D17 /* Main.storyboard */,
@@ -364,27 +357,23 @@
 				3F4CA4B920F4D3B9003C1FD0 /* b1.png in Resources */,
 				3FCE3AE820E5262C005B6D17 /* LaunchScreen.storyboard in Resources */,
 				3F4CA4B820F4D3B9003C1FD0 /* a9.jpg in Resources */,
-				3F4CA4DE20F8A847003C1FD0 /* 填充素材.png in Resources */,
-				3FA4E27620ECD6E700EE397D /* sd1527562013_2.MP4 in Resources */,
-				3F4CA4DD20F8A847003C1FD0 /* 动态纹理视频素材.mp4 in Resources */,
+				3F4CA4DE20F8A847003C1FD0 /* fill.png in Resources */,
+				3F4CA4DD20F8A847003C1FD0 /* fillV.mp4 in Resources */,
 				3F4CA4B120F4D3B9003C1FD0 /* a2.jpg in Resources */,
 				3F4CA4C020F4D3B9003C1FD0 /* b6.png in Resources */,
 				3F4CA4C120F4D3B9003C1FD0 /* b7.png in Resources */,
 				3F4CA4C720F4D3B9003C1FD0 /* shuoming1.jpg in Resources */,
 				3F4CA4C820F4D3B9003C1FD0 /* shuoming2.jpg in Resources */,
-				3F4CA49120F37A1B003C1FD0 /* b.png in Resources */,
-				3F4CA48F20F37A0C003C1FD0 /* a.mp4 in Resources */,
 				3F4CA4BA20F4D3B9003C1FD0 /* b10.png in Resources */,
-				3F4CA4D720F8A83B003C1FD0 /* 背景素材.png in Resources */,
+				3F4CA4D720F8A83B003C1FD0 /* base.png in Resources */,
 				3F4CA4DF20F8A847003C1FD0 /* 效果.mp4 in Resources */,
-				3F4CA4D820F8A83B003C1FD0 /* 背景风格动态素材.mp4 in Resources */,
+				3F4CA4D820F8A83B003C1FD0 /* baseV.mp4 in Resources */,
 				3F4CA4B520F4D3B9003C1FD0 /* a6.jpg in Resources */,
 				3F4CA4C220F4D3B9003C1FD0 /* b8.png in Resources */,
 				3F4CA4BB20F4D3B9003C1FD0 /* b11.png in Resources */,
 				3FCE3AE520E5262C005B6D17 /* Assets.xcassets in Resources */,
 				3F4CA4D620F8A83B003C1FD0 /* 完整作品.mp4 in Resources */,
 				3F4CA4C420F4D3B9003C1FD0 /* bundle.json in Resources */,
-				3FA4E27820ECD71C00EE397D /* IMG_43CCB4204EBC-1.jpeg in Resources */,
 				3F4CA4BF20F4D3B9003C1FD0 /* b5.png in Resources */,
 				3F4CA4B620F4D3B9003C1FD0 /* a7.jpg in Resources */,
 				3FCE3AE320E5262C005B6D17 /* Main.storyboard in Resources */,
@@ -463,7 +452,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3F394E1120EA10020056B239 /* MaskCompositeFilter.m in Sources */,
+				3F394E1120EA10020056B239 /* MaskMixFilter.m in Sources */,
 				3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */,
 				3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */,
 				3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */,
@@ -475,6 +464,7 @@
 				3FCE3ADA20E5262C005B6D17 /* main.m in Sources */,
 				3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */,
 				3F394E1320EA10020056B239 /* BaseFilterRenderTask.m in Sources */,
+				3F26A2FA20FC3949003A39BE /* NUMAMultiplyBlendFilter.m in Sources */,
 				3F394E1220EA10020056B239 /* ColorMaskFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

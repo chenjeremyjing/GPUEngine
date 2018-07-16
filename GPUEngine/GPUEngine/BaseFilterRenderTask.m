@@ -16,6 +16,8 @@
 //底图风格滤镜组
 @property (nonatomic, strong) FilterLineStyleHelper *filterLinerStyleHelper;
 
+@property (nonatomic, copy) RenderBlock renderBlock;
+
 @end
 
 @implementation BaseFilterRenderTask
@@ -84,8 +86,18 @@
     [self.baseTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
 }
 
-- (void)processAll {
+- (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
+    self.renderBlock = renderBlock;
     [self.baseTexture processImage];
+    [self.filterLinerStyleHelper startProcessWithRenderBlock:^(BOOL hasAnimationVideo) {
+        [self.baseTexture processImage];
+        self.hasAnimationVideo = hasAnimationVideo;
+        self.renderBlock(hasAnimationVideo);
+    }];
+}
+
+- (BOOL)hasAnimationVideo {
+    return self.filterLinerStyleHelper.hasAnimationVideo;
 }
 
 @end

@@ -21,6 +21,9 @@
 
 @property (nonatomic, assign) CMTime endTime;
 
+@property (nonatomic, copy) RenderBlock renderBlock;
+
+
 @end
 
 @implementation FillFilterRenderTask
@@ -30,16 +33,30 @@
     [self.filterLinerStyleHelper.sufixFilter addTarget:target];
 }
 
-- (void)processAll {
-    if ([_fillTexture isKindOfClass:[GPUImageMovie class]]) {
-        GPUImageMovie *movie = (GPUImageMovie *)_fillTexture;
-        [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
-        [movie startProcessing];
-        [self.player play];
-    } else {
-        GPUImagePicture *pic = (GPUImagePicture *)self.fillTexture;
+- (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
+    self.renderBlock = renderBlock;
+    __weak typeof(self) weakSelf = self;
+    
+    if ([weakSelf.fillTexture isKindOfClass:[GPUImagePicture class]]) {
+        GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
         [pic processImage];
     }
+    
+    [self.filterLinerStyleHelper startProcessWithRenderBlock:^(BOOL hasAnimationVideo) {
+        if ([weakSelf.fillTexture isKindOfClass:[GPUImageMovie class]]) {
+            weakSelf.renderBlock(YES);
+            GPUImageMovie *movie = (GPUImageMovie *)weakSelf.fillTexture;
+            if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
+                [movie startProcessing];
+                [weakSelf.player play];
+            }
+        } else {
+            weakSelf.renderBlock(hasAnimationVideo);
+            GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
+            [pic processImage];
+        }
+    }];
+    
 }
 
 - (void)setVideoSpeed:(GPUVideoSpeedType)speed{
@@ -86,6 +103,8 @@
     if ([fillTexture isKindOfClass:[GPUImageMovie class]]) {
         GPUImageMovie *movie = (GPUImageMovie *)fillTexture;
         [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
+        self.startTime = kCMTimeZero;
+        self.endTime = self.player.currentItem.duration;
     }
     [_fillTexture addTarget:self.fillTransFilter];
     [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
@@ -93,7 +112,9 @@
 
 - (void)setFilterStyle:(FilterLineStyleType)filterStyle {
     _filterStyle = filterStyle;
+    [self.fillTransFilter removeAllTargets];
     self.filterLinerStyleHelper.filterStyle = filterStyle;
+    [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
 }
 
 - (void)setFillTransform:(CATransform3D)fillTransform {
@@ -132,18 +153,17 @@
         _player.volume = 0;
         __weak typeof (self)weakSelf = self;
         [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
-                [weakSelf.player seekToTime:kCMTimeZero];
+            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
+                [weakSelf.player seekToTime:weakSelf.startTime];
                 [weakSelf.player play];
             }
-//            if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
-//                [weakSelf.player seekToTime:weakSelf.startTime];
-//                [weakSelf.player play];
-//            }
         }];
     }
     return _player;
 }
 
+- (BOOL)hasAnimationVideo {
+    return self.filterLinerStyleHelper.hasAnimationVideo || [self.fillTexture isKindOfClass:[GPUImageMovie class]];
+}
 
 @end

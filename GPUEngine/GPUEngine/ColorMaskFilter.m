@@ -25,7 +25,7 @@ NSString *const kGPUImageColorMaskFragmentShaderString = SHADER_STRING
  {
      lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
      
-     lowp vec4 resultColor = vec4(0.0);
+     lowp vec4 resultColor = vec4(vec3(1.0), 0.0);
 
      if ((textureColor.r >= color_R - offset && textureColor.r <= color_R + offset) && (textureColor.g >= color_G - offset && textureColor.g <= color_G + offset) && (textureColor.b >= color_B - offset && textureColor.b <= color_B + offset))
      {

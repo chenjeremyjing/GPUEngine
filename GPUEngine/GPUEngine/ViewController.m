@@ -10,7 +10,7 @@
 #import "GPUImage.h"
 #import "GPURenderEngine.h"
 #import "ColorMaskFilter.h"
-#import "MaskCompositeFilter.h"
+#import "MaskMixFilter.h"
 
 typedef NS_ENUM(NSInteger, currentTarget)
 {
@@ -24,6 +24,10 @@ typedef NS_ENUM(NSInteger, currentTarget)
     GPUImagePicture *pic;
     GPUImageView *gView;
     UISlider *_videoTimeLine;
+    
+    GPUImagePicture *mask1;
+    GPUImageRawDataInput *mask2;
+    GPUImagePicture *mask3;
 }
 
 @property (nonatomic)unsigned char * eraseData; //橡皮擦图片地址
@@ -113,7 +117,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
     [self.view addSubview:speedBtn];
     speedBtn.frame = CGRectMake(0, CGRectGetMaxY(hiddenBtn.frame) + 10, 80, 30);
     
-    _videoTimeLine = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxY(speedBtn.frame) + 20, CGRectGetMinY(speedBtn.frame), 200, 30)];
+    _videoTimeLine = [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(speedBtn.frame) + 20, CGRectGetMinY(speedBtn.frame), 200, 30)];
     [self.view addSubview:_videoTimeLine];
     _videoTimeLine.minimumValue = 0;
     _videoTimeLine.maximumValue = 1;
@@ -234,28 +238,63 @@ typedef NS_ENUM(NSInteger, currentTarget)
     int preferredTimeScale = 1 * NSEC_PER_SEC;
     CMTime currentTime = CMTimeMakeWithSeconds(second, preferredTimeScale);
     [self.player seekToTime:currentTime];
-    [self.player play];
+    CGFloat speed = self.speed * 2.0;
+    if (speed == -4) {
+        speed = 0.25;
+    } else if (speed == -2)
+    {
+        speed = 0.5;
+    } else if (speed == 0)
+    {
+        speed = 1;
+    } else if (speed == 2)
+    {
+        speed = 2;
+    } else if (speed == 4)
+    {
+        speed = 4;
+    }
+    self.player.rate = speed;
+//    [GPURenderEngine renderEngine] updatef
 }
 
 - (void)hiddenFill:(UIButton *)sender
 {
     NSLog(@"隐藏遮罩和填充");
+    sender.selected = !sender.selected;
+    [[GPURenderEngine renderEngine] setMaskAndFillHidden:sender.selected];
+    
 }
 
 - (void)speedBtn:(UIButton *)sender
 {
-    
-    CGFloat rate = 0;
-    
-    if (self.speed > 3) {
+    self.speed++;
+    if (self.speed > 2) {
         self.speed = -2;
     }
     
     CGFloat speed = self.speed * 2.0;
+    [sender setTitle:[NSString stringWithFormat:@"speed%ld", (long)speed] forState:UIControlStateNormal];
+    if (speed == -4) {
+        speed = 0.25;
+    } else if (speed == -2)
+    {
+        speed = 0.5;
+    } else if (speed == 0)
+    {
+        speed = 1;
+    } else if (speed == 2)
+    {
+        speed = 2;
+    } else if (speed == 4)
+    {
+        speed = 4;
+    }
+    
+    
+    NSLog(@"speed%f",speed);
     
     self.player.rate = speed;
-    
-    [sender setTitle:[NSString stringWithFormat:@"speed%ld", (long)speed] forState:UIControlStateNormal];
     
 }
 
@@ -282,117 +321,121 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 }
 
-- (void)setupFilters {
+- (void)engine {
     
-    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]];
-    
-    
-    ColorMaskFilter *ColorMask = [[ColorMaskFilter alloc] init];
-    ColorMask.r = 0.1;
-    ColorMask.g = 0.1;
-    ColorMask.b = 0.1;
-    ColorMask.offset = 0.1;
-    
-    GPUImagePicture *mask1 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
-//    GPUImageRawDataInput *mask2 = [[GPUImageRawDataInput alloc] initWithBytes:self.eraseData size:panelSize pixelFormat:GPUPixelFormatRGBA type:GPUPixelTypeUByte];
-    GPUImagePicture *mask2 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
-    GPUImagePicture *mask3 = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
-    MaskCompositeFilter *MaskComposite = [[MaskCompositeFilter alloc] init];
-    
-    [mask1 addTarget:MaskComposite];
-    [mask2 addTarget:MaskComposite];
-    [mask3 addTarget:MaskComposite];
-//    [ColorMask addTarget:MaskComposite];
+    GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
+    [renderEngine setRenderView:gView];
+    render_color maskColor = {
+        0.1,
+        0.1,
+        0.1,
+        0.1
+    };
+    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"base"]];
+    //baseColorSelectMask
+    [renderEngine updateColorMaskColorAndTolerance:maskColor];
+    //base
+    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"base"]];
+    [renderEngine updateBaseFilterStyleWithFilterStyle:FilterLineCartoonStyleType];
+//    [renderEngine updateBaseWithTransform:[self setContentModeAspectToFitWithSize:pic.outputImageSize]];
+    //fill
+//    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]];
+//    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
+    [renderEngine updateFillResourceWithImage:[UIImage imageNamed:@"fill"]];
+    [renderEngine updateFillFilterStyleWithFilterStyle:FilterLineCityStyleType];
+//    [renderEngine updateFillWithTransform:[self setContentModeAspectToFitWithSize:pic.outputImageSize]];
 
-    [MaskComposite addTarget:gView];
+    //textMask
+    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b10"]];
     
-//    [mask2 processData];
-    [mask1 processImage];
-    [mask2 processImage];
-    [mask3 processImage];
-
-//    GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
-//    [renderEngine setRenderView:gView];
-//    render_color maskColor = {
-//        0.1,
-//        0.1,
-//        0.1,
-//        0.1
-//    };
-//    //baseColorSelectMask
-//    [renderEngine updateColorMaskColorAndTolerance:maskColor];
-//    //base
-//    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"b"]];
-//    //fill
-////    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
-//
-//    //textMask
-//    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b2"]];
-//
-//    //eraserMask
-//    [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
-//
-//
-//
-    
-//    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"b"]];
-//
-//    self.baseTrans = [[GPUImageTransformFilter alloc] init];
-//    self.baseTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
-//
-//    self.blendFilter = [[GPUImageMultiplyBlendFilter alloc] init];
-////    self.blendFilter.mix = 0.5;
-//
-//
-//    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
-//    self.player = [[AVPlayer alloc] initWithPlayerItem:item];
-//    _player.rate = 1.0;
-//    _player.volume = 0;
-//
-//    if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-//        NSLog(@"dssd");
-//    }
-//    __weak typeof(self) weakSelf = self;
-//    [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-//
-//        CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
-//        CGFloat current = CMTimeGetSeconds(weakSelf.player.currentItem.currentTime);
-//
-//        weakSelf.videoTimeLine.value = current / duration;
-//
-//        if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
-//            [weakSelf.player pause];
-//            [weakSelf.player seekToTime:kCMTimeZero];
-//            [weakSelf.player play];
-//        }
-//
-//    }];
-//
-//    GPUImageMovie *movie = [[GPUImageMovie alloc] initWithPlayerItem:item];
-//    movie.runBenchmark = YES;
-//    movie.playAtActualSpeed = YES;
-//
-//
-//    self.FillTrans = [[GPUImageTransformFilter alloc] init];
-//    self.FillTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
-//
-//    [pic addTarget:self.baseTrans];
-//    [movie addTarget:self.FillTrans];
-//    [self.baseTrans addTarget:self.blendFilter atTextureLocation:0];
-//    [self.FillTrans addTarget:self.blendFilter atTextureLocation:1];
-//
-//    [pic processImage];
-//
-//    [self.blendFilter addTarget:gView];
-//
-//    [movie startProcessing];
-//    movie.renderFrameBlock = ^{
-//        [pic processImage];
-//    };
-//
-//    [self.player play];
+    //eraserMask
+    [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
 }
 
+- (void)setupFilters {
+    
+    [self engine];
+
+    [self test];
+}
+
+- (void)test
+{
+    self.textTrans = [[GPUImageTransformFilter alloc] init];
+    //    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"base"]];
+    //
+    self.baseTrans = [[GPUImageTransformFilter alloc] init];
+    //    self.baseTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
+    //
+    //    self.blendFilter = [[NUMAMultiplyBlendFilter alloc] init];
+    //
+    //    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]];
+    //
+    //    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
+    //    self.player = [[AVPlayer alloc] initWithPlayerItem:item];
+    //    _player.rate = 1.0;
+    //    _player.volume = 0;
+    //
+    //    if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
+    //        NSLog(@"dssd");
+    //    }
+    //    __weak typeof(self) weakSelf = self;
+    //    [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+    //
+    //        CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
+    //        CGFloat current = CMTimeGetSeconds(weakSelf.player.currentItem.currentTime);
+    //
+    //        weakSelf.videoTimeLine.value = current / duration;
+    //
+    //        if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
+    //            [weakSelf.player pause];
+    //            [weakSelf.player seekToTime:kCMTimeZero];
+    //            CGFloat speed = self.speed * 2.0;
+    //            if (speed == -4) {
+    //                speed = 0.25;
+    //            } else if (speed == -2)
+    //            {
+    //                speed = 0.5;
+    //            } else if (speed == 0)
+    //            {
+    //                speed = 1;
+    //            } else if (speed == 2)
+    //            {
+    //                speed = 2;
+    //            } else if (speed == 4)
+    //            {
+    //                speed = 4;
+    //            }
+    //            [weakSelf.player play];
+    //            weakSelf.player.rate = speed;
+    //        }
+    //
+    //    }];
+    //
+    //    GPUImageMovie *movie = [[GPUImageMovie alloc] initWithPlayerItem:item];
+    //    movie.runBenchmark = YES;
+    //    movie.playAtActualSpeed = YES;
+    //
+    //
+    self.FillTrans = [[GPUImageTransformFilter alloc] init];
+    //    self.FillTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
+    //
+    //    [pic addTarget:self.baseTrans];
+    //    [movie addTarget:self.FillTrans];
+    //    [self.baseTrans addTarget:self.blendFilter atTextureLocation:0];
+    //    [self.FillTrans addTarget:self.blendFilter atTextureLocation:1];
+    //
+    //    [pic processImage];
+    //
+    //    [self.blendFilter addTarget:gView];
+    //
+    //    [movie startProcessing];
+    //    movie.renderFrameBlock = ^{
+    //        [pic processImage];
+    //    };
+    //
+    //    [self.player play];
+}
 - (void)pan:(UIPanGestureRecognizer *)sender {
     CGPoint point = [sender locationInView:sender.view];
     if (sender.state == UIGestureRecognizerStateBegan)
@@ -408,7 +451,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
                 transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
                 transform.m42 = transform.m42 + (point.y - self.lastPoint.y)/self.view.frame.size.width*2;
                 self.baseTrans.transform3D = transform;
-                
+                [[GPURenderEngine renderEngine] updateBaseWithTransform:transform];
             }
             break;
         case currentTargetFill:
@@ -417,6 +460,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
             transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
             transform.m42 = transform.m42 + (point.y- self.lastPoint.y)/self.view.frame.size.width*2;
             self.FillTrans.transform3D = transform;
+            [[GPURenderEngine renderEngine] updateFillWithTransform:transform];
         }
             break;
         case currentTargetText:
@@ -425,6 +469,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
                 transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
                 transform.m42 = transform.m42 + (point.y - self.lastPoint.y)/self.view.frame.size.width*2;
                 self.textTrans.transform3D = transform;
+                [[GPURenderEngine renderEngine] updateTextMaskWithTransform:transform];
             }
             break;
             
@@ -432,11 +477,8 @@ typedef NS_ENUM(NSInteger, currentTarget)
             break;
     }
     
-    
-
     self.lastPoint = point;
 
-    
 }
 
 - (void)pinchGes:(UIPinchGestureRecognizer *)sender
@@ -444,12 +486,18 @@ typedef NS_ENUM(NSInteger, currentTarget)
     switch (self.editTarget) {
         case currentTargetBase:
             self.baseTrans.transform3D = CATransform3DScale(self.baseTrans.transform3D, sender.scale, sender.scale, 1);
+            [[GPURenderEngine renderEngine] updateBaseWithTransform:CATransform3DScale(self.baseTrans.transform3D, sender.scale, sender.scale, 1)];
+
             break;
         case currentTargetFill:
             self.FillTrans.transform3D = CATransform3DScale(self.FillTrans.transform3D, sender.scale, sender.scale, 1);
+            [[GPURenderEngine renderEngine] updateFillWithTransform:CATransform3DScale(self.FillTrans.transform3D, sender.scale, sender.scale, 1)];
+
             break;
         case currentTargetText:
             self.textTrans.transform3D = CATransform3DScale(self.textTrans.transform3D, sender.scale, sender.scale, 1);
+            [[GPURenderEngine renderEngine] updateTextMaskWithTransform:CATransform3DScale(self.textTrans.transform3D, sender.scale, sender.scale, 1)];
+
             break;
             
         default:
@@ -463,12 +511,18 @@ typedef NS_ENUM(NSInteger, currentTarget)
     switch (self.editTarget) {
         case currentTargetBase:
             self.baseTrans.transform3D = CATransform3DRotate(self.baseTrans.transform3D, sender.rotation, 0, 0, 1);
+            [[GPURenderEngine renderEngine] updateBaseWithTransform:CATransform3DRotate(self.baseTrans.transform3D, sender.rotation, 0, 0, 1)];
+
             break;
         case currentTargetFill:
             self.FillTrans.transform3D = CATransform3DRotate(self.FillTrans.transform3D, sender.rotation, 0, 0, 1);
+            [[GPURenderEngine renderEngine] updateFillWithTransform:CATransform3DRotate(self.FillTrans.transform3D, sender.rotation, 0, 0, 1)];
+
             break;
         case currentTargetText:
             self.textTrans.transform3D = CATransform3DRotate(self.textTrans.transform3D, sender.rotation, 0, 0, 1);
+            [[GPURenderEngine renderEngine] updateTextMaskWithTransform:CATransform3DRotate(self.textTrans.transform3D, sender.rotation, 0, 0, 1)];
+
             break;
             
         default:
@@ -527,11 +581,14 @@ typedef NS_ENUM(NSInteger, currentTarget)
     }
     CGContextSetShouldAntialias(context, true);
     CGContextSetAllowsAntialiasing(context, true);
-    CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:1 green:0 blue:0 alpha:0] CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:1 green:0 blue:0 alpha:0.5] CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, panelSize.width, panelSize.height));
     CGContextTranslateCTM(context, 0, panelSize.height);
     CGContextScaleCTM(context, 1.0f, -1.0f);
 
+    CGImageRef cgImg = CGBitmapContextCreateImage(context);
+    UIImage *img = [UIImage imageWithCGImage:cgImg];
+    
     CGContextRelease(context);
 }
 

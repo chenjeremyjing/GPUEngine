@@ -24,6 +24,8 @@
 
 @property (nonatomic, strong) GPUImageTwoInputFilter *animationBlendFilter;
 
+@property (nonatomic, copy) filterLineStyleRenderBlock filterLineRenderBlock;
+
 @end
 
 @implementation FilterLineStyleHelper
@@ -32,8 +34,22 @@
 + (instancetype)filterLineWithStyle:(FilterLineStyleType)filterStyle
 {
     FilterLineStyleHelper *filterStyleHelper = [[FilterLineStyleHelper alloc] init];
-    filterStyleHelper.filterStyle = FilterLineCityStyleType;
+    filterStyleHelper.filterStyle = filterStyle;
     return filterStyleHelper;
+}
+
+- (void)startProcessWithRenderBlock:(filterLineStyleRenderBlock)renderBlock
+{
+    self.filterLineRenderBlock = renderBlock;
+    if (!_animtaionMovie) {
+        self.filterLineRenderBlock(NO);
+        return;
+    }
+    
+    if (_player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
+        [_player play];
+    }
+    
 }
 
 #pragma mark -- Setter && Getter
@@ -44,6 +60,7 @@
         _player.volume = 0;
         __weak typeof (self)weakSelf = self;
         [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            NSLog(@"playing:styleWithVideo_____%d", weakSelf.filterStyle);
             if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
                 [weakSelf.player seekToTime:kCMTimeZero];
                 [weakSelf.player play];
@@ -66,10 +83,11 @@
             [saturationfilter addTarget:contrastfilter];
             
             //动态视频混合滤镜
-            self.animationBlendFilter = [[GPUImageNormalBlendFilter alloc]init];
+            self.animationBlendFilter = [[NUMAMultiplyBlendFilter alloc] init];
             [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
             
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]]];
+            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]]];
+            self.hasAnimationVideo = YES;
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;
@@ -83,16 +101,17 @@
             self.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
             GPUImageSaturationFilter *saturationfilter = [[GPUImageSaturationFilter alloc] init];
             GPUImageContrastFilter *contrastfilter = [[GPUImageContrastFilter alloc] init];
-            self.animationBlendFilter = [[GPUImageNormalBlendFilter alloc]init];
+            self.animationBlendFilter = [[NUMAMultiplyBlendFilter alloc]init];
             [saturationfilter addTarget:contrastfilter];
             [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"a" ofType:@".mp4"]]];
+            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]]];
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;
             self.secondAdjustFilter = contrastfilter;
             self.prefixFilter = saturationfilter;
             self.sufixFilter = contrastfilter;
+            self.hasAnimationVideo = YES;
 
         }
             break;
@@ -112,10 +131,17 @@
     self.animtaionMovie.playAtActualSpeed = YES;
     [self.animtaionMovie addTarget:self.animationBlendFilter atTextureLocation:1];
     [self.animationBlendFilter addTarget:self.colorCompensationFilter];
+    [self.animtaionMovie startProcessing];
+    __weak typeof(self)weakSelf = self;
+    self.animtaionMovie.renderFrameBlock = ^{
+        if (weakSelf.filterLineRenderBlock) {
+            NSLog(@"rendering:styleWithVideo%d", weakSelf.filterStyle);
+            weakSelf.filterLineRenderBlock(YES);
+        }
+    };
     
     [self.player pause];
     [self.player replaceCurrentItemWithPlayerItem:_playerItem];
-    [self.player play];
 }
 
 - (void)setCompensationColor:(UIColor *)compensationColor {
@@ -126,9 +152,9 @@
     _compensationAlpha = compensationAlpha;
 }
 
-//- (GPUImageFilter *)sufixFilter {
-//    return self.colorCompensationFilter;
-//}
+- (GPUImageFilter *)sufixFilter {
+    return self.animationBlendFilter;
+}
 
 
 

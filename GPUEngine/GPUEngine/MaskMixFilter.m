@@ -6,9 +6,9 @@
 //  Copyright © 2018年 com.Jeremy. All rights reserved.
 //
 
-#import "MaskCompositeFilter.h"
+#import "MaskMixFilter.h"
 
-NSString *const kGPUImageMaskThreeInputTextureVertexShaderString = SHADER_STRING
+NSString *const kGPUImageMaskMixTextureVertexShaderString = SHADER_STRING
 (
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
@@ -28,7 +28,7 @@ NSString *const kGPUImageMaskThreeInputTextureVertexShaderString = SHADER_STRING
  }
  );
 
-NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
+NSString *const kGPUImageMaskMixFragmentShaderString = SHADER_STRING
 (
  varying highp vec2 textureCoordinate;
  varying highp vec2 textureCoordinate2;
@@ -45,59 +45,51 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
  
  void main()
  {
-     lowp vec4 eraserMask = texture2D(inputImageTexture, textureCoordinate);
+     lowp vec4 colorMask = texture2D(inputImageTexture, textureCoordinate);
      lowp vec4 textMask = texture2D(inputImageTexture2, textureCoordinate2);
-     lowp vec4 colorMask = texture2D(inputImageTexture3, textureCoordinate3);
+     lowp vec4 eraserMask = texture2D(inputImageTexture3, textureCoordinate3);
      
-     lowp vec4 resultColor = vec4(0.0);
+     lowp vec4 resultColor = vec4(vec3(1.0), 0.0);
      
-//     if (eraserMaskHidden == 1.0)
-//     {
-//         eraserMask.a = 0.0;
-//     }
-//     if (textMaskHidden == 1.0)
-//     {
-//         textMask.a = 0.0;
-//     }
-//     if (colorMaskHidden == 1.0)
-//     {
-//         colorMask.a = 0.0;
-//     }
+     if (eraserMaskHidden == 1.0)
+     {
+         eraserMask.a = 0.0;
+     }
+     if (textMaskHidden == 1.0)
+     {
+         textMask.a = 0.0;
+     }
+     if (colorMaskHidden == 1.0)
+     {
+         colorMask.a = 0.0;
+     }
      
-//     if (eraserMask.a == 0.0 && textMask.a == 0.0 && colorMask.a == 0.0)
-//     {
-//         resultColor.a = 0.0;
-//     }
-//     else
-//     {
      resultColor.a = eraserMask.a;
      if (textMask.a > resultColor.a)
      {
          resultColor.a = textMask.a;
      }
-//     if (colorMask.a > resultColor.a)
-//     {
-//         resultColor.a = colorMask.a;
-//     }
-//     }
-     
-     gl_FragColor = vec4(1.0);
+     if (colorMask.a > resultColor.a)
+     {
+         resultColor.a = colorMask.a;
+     }
+     gl_FragColor = resultColor;
  }
  );
 
 
-@implementation MaskCompositeFilter
+@implementation MaskMixFilter
 
 - (id)init;
 {
-    if (!(self = [self initWithVertexShaderFromString:kGPUImageMaskThreeInputTextureVertexShaderString fragmentShaderFromString:kGPUImageMaskGenerateFragmentShaderString]))
+    if (!(self = [self initWithVertexShaderFromString:kGPUImageMaskMixTextureVertexShaderString fragmentShaderFromString:kGPUImageMaskMixFragmentShaderString]))
     {
         return nil;
     }
 
-    self.colorMaskHidden = YES;
-    self.eraserMaskHidden = YES;
-    self.textMaskHidden = YES;
+    self.colorMaskHidden = NO;
+    self.eraserMaskHidden = NO;
+    self.textMaskHidden = NO;
     
     return self;
 }
@@ -109,9 +101,12 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
     }
     
     inputRotation2 = kGPUImageNoRotation;
-    
+    inputRotation3 = kGPUImageNoRotation;
+
     hasSetFirstTexture = NO;
-    
+    hasSetSecondTexture = NO;
+    hasSetThirdTexture = NO;
+
     hasReceivedFirstFrame = NO;
     firstFrameWasVideo = NO;
     firstFrameCheckDisabled = NO;
@@ -122,6 +117,8 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
     
     hasReceivedThirdFrame = NO;
     thirdFrameWasVideo = NO;
+    thirdFrameCheckDisabled = NO;
+
     
     firstFrameTime = kCMTimeInvalid;
     secondFrameTime = kCMTimeInvalid;
@@ -208,16 +205,8 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
     
     glVertexAttribPointer(filterPositionAttribute, 2, GL_FLOAT, 0, 0, vertices);
     glVertexAttribPointer(filterTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
-    
-    static const GLfloat imageVertices[] = {
-        -1.0f, -1.0f,
-        1.0f, -1.0f,
-        -1.0f,  1.0f,
-        1.0f,  1.0f,
-    };
-    
-    glVertexAttribPointer(filterSecondTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
-    glVertexAttribPointer(filterThirdTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, imageVertices);
+    glVertexAttribPointer(filterSecondTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [[self class] textureCoordinatesForRotation:inputRotation2]);
+    glVertexAttribPointer(filterThirdTextureCoordinateAttribute, 2, GL_FLOAT, 0, 0, [[self class] textureCoordinatesForRotation:inputRotation3]);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     [firstInputFramebuffer unlock];
@@ -235,11 +224,7 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
 - (NSInteger)nextAvailableTextureIndex;
 {
 
-    if (hasSetThirdTexture)
-    {
-        return 3;
-    }
-    else if (hasSetSecondTexture)
+    if (hasSetSecondTexture)
     {
         return 2;
     }
@@ -334,7 +319,7 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
     {
         rotationToCheck = inputRotation2;
     }
-    else if (textureIndex == 2)
+    else
     {
         rotationToCheck = inputRotation3;
     }
@@ -400,7 +385,7 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
             }
         }
     }
-    else if (textureIndex == 2)
+    else
     {
         hasReceivedThirdFrame = YES;
         thirdFrameTime = frameTime;
@@ -439,7 +424,6 @@ NSString *const kGPUImageMaskGenerateFragmentShaderString = SHADER_STRING
         hasReceivedFirstFrame = NO;
         hasReceivedSecondFrame = NO;
         hasReceivedThirdFrame = NO;
-        
     }
 }
 

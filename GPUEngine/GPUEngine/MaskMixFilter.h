@@ -8,7 +8,7 @@
 
 #import <GPUImage/GPUImage.h>
 
-@interface MaskCompositeFilter : GPUImageFilter
+@interface MaskMixFilter : GPUImageFilter
 {
     GPUImageFramebuffer *secondInputFramebuffer;
     GPUImageFramebuffer *thirdInputFramebuffer;
@@ -38,5 +38,11 @@
 @property(readwrite, nonatomic) BOOL textMaskHidden;
 @property(readwrite, nonatomic) BOOL colorMaskHidden;
 
+
+- (void)disableFirstFrameCheck;
+
+- (void)disableSecondFrameCheck;
+
+- (void)disableThirdFrameCheck;
 
 @end

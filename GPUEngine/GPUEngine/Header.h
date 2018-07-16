@@ -10,6 +10,8 @@
 #ifndef Header_h
 #define Header_h
 
+#import "NUMAMultiplyBlendFilter.h"
+
 #define panelSize CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width)
 
 typedef void(^processingBlock)(CGFloat progress);

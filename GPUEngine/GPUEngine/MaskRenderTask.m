@@ -8,12 +8,12 @@
 //
 
 #import "MaskRenderTask.h"
-#import "MaskCompositeFilter.h"
+#import "MaskMixFilter.h"
 
 @interface MaskRenderTask()
 
 //遮罩混合滤镜 （橡皮擦，颜色抠图，文字轮廓 三层遮罩的混合）
-@property (nonatomic, strong) MaskCompositeFilter *compositeFilter;
+@property (nonatomic, strong) MaskMixFilter *compositeFilter;
 
 //文字遮罩变形滤镜
 @property (nonatomic, strong) GPUImageTransformFilter *textTransFilter;
@@ -31,7 +31,7 @@
     [self.compositeFilter addTarget:target];
 }
 
-- (void)processAll {
+- (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
     [self.textMaskTexture processImage];
     [self.eraserMaskTexture processData];
 }
@@ -45,9 +45,9 @@
     return _textTransFilter;
 }
 
-- (MaskCompositeFilter *)compositeFilter {
+- (MaskMixFilter *)compositeFilter {
     if (!_compositeFilter) {
-        _compositeFilter = [[MaskCompositeFilter alloc] init];
+        _compositeFilter = [[MaskMixFilter alloc] init];
     }
     return _compositeFilter;
 }
@@ -88,6 +88,11 @@
 - (void)setEraserMaskHidden:(BOOL)eraserMaskHidden {
     _eraserMaskHidden = eraserMaskHidden;
     self.compositeFilter.eraserMaskHidden = _eraserMaskHidden;
+}
+
+- (void)setTextMaskTransform:(CATransform3D)textMaskTransform
+{
+    self.textTransFilter.transform3D = textMaskTransform;
 }
 
 @end

@@ -15,6 +15,7 @@ typedef  enum FilterLineStyleType{
 
 }FilterLineStyleType ;
 
+typedef void(^filterLineStyleRenderBlock)(BOOL hasAnimationVideo);
 
 @interface FilterLineStyleHelper : NSObject
 
@@ -39,7 +40,10 @@ typedef  enum FilterLineStyleType{
 //纯色补偿 不透明度
 @property (nonatomic, assign) CGFloat compensationAlpha;
 
+@property (nonatomic, assign) BOOL hasAnimationVideo;
+
 + (instancetype)filterLineWithStyle:(FilterLineStyleType)filterStyle;
 
+- (void)startProcessWithRenderBlock:(filterLineStyleRenderBlock)renderBlock;
 
 @end
