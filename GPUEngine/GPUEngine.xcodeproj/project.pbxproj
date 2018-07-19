@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3F26A2FA20FC3949003A39BE /* NUMAMultiplyBlendFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */; };
+		3F26A30021003451003A39BE /* GPUImageMovie+RenderBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F26A2FF21003451003A39BE /* GPUImageMovie+RenderBlock.m */; };
 		3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */; };
 		3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFE20EA0FFD0056B239 /* FillFilterRenderTask.m */; };
 		3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F394DFF20EA0FFD0056B239 /* ColorCompensationFilter.m */; };
@@ -64,6 +65,8 @@
 		3ADDA088E6AA45CDA2274F9B /* libPods-GPUEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GPUEngine.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F26A2F820FC3949003A39BE /* NUMAMultiplyBlendFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAMultiplyBlendFilter.h; sourceTree = "<group>"; };
 		3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAMultiplyBlendFilter.m; sourceTree = "<group>"; };
+		3F26A2FE21003451003A39BE /* GPUImageMovie+RenderBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GPUImageMovie+RenderBlock.h"; sourceTree = "<group>"; };
+		3F26A2FF21003451003A39BE /* GPUImageMovie+RenderBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "GPUImageMovie+RenderBlock.m"; sourceTree = "<group>"; };
 		3F394DFB20EA0FFB0056B239 /* FilterLineStyleHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterLineStyleHelper.h; sourceTree = "<group>"; };
 		3F394DFC20EA0FFB0056B239 /* FillFilterRenderTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFilterRenderTask.h; sourceTree = "<group>"; };
 		3F394DFD20EA0FFC0056B239 /* FilterLineStyleHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterLineStyleHelper.m; sourceTree = "<group>"; };
@@ -257,6 +260,8 @@
 				3F394E0120EA0FFE0056B239 /* MaskMixFilter.m */,
 				3F394E0620EA10000056B239 /* MaskRenderTask.h */,
 				3F394E0920EA10010056B239 /* MaskRenderTask.m */,
+				3F26A2FE21003451003A39BE /* GPUImageMovie+RenderBlock.h */,
+				3F26A2FF21003451003A39BE /* GPUImageMovie+RenderBlock.m */,
 				3FCE3AE120E5262C005B6D17 /* Main.storyboard */,
 				3FCE3AE420E5262C005B6D17 /* Assets.xcassets */,
 				3FCE3AE620E5262C005B6D17 /* LaunchScreen.storyboard */,
@@ -455,6 +460,7 @@
 				3F394E1120EA10020056B239 /* MaskMixFilter.m in Sources */,
 				3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */,
 				3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */,
+				3F26A30021003451003A39BE /* GPUImageMovie+RenderBlock.m in Sources */,
 				3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */,
 				3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */,
 				3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */,

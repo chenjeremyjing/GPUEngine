@@ -3,8 +3,6 @@
 #import "GPUImageContext.h"
 #import "GPUImageOutput.h"
 
-typedef void(^renderBlock)();
-
 /** Protocol for getting Movie played callback.
  */
 @protocol GPUImageMovieDelegate <NSObject>
@@ -44,8 +42,6 @@ typedef void(^renderBlock)();
 @property (readonly, nonatomic) AVAssetReader *assetReader;
 @property (readonly, nonatomic) BOOL audioEncodingIsFinished;
 @property (readonly, nonatomic) BOOL videoEncodingIsFinished;
-
-@property (nonatomic, copy) renderBlock renderFrameBlock;
 
 /// @name Initialization and teardown
 - (id)initWithAsset:(AVAsset *)asset;

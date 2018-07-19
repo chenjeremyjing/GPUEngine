@@ -341,9 +341,6 @@
         if( pixelBuffer )
             runSynchronouslyOnVideoProcessingQueue(^{
                 [weakSelf processMovieFrame:pixelBuffer withSampleTime:outputItemTime];
-                if (weakSelf.renderFrameBlock) {
-                    weakSelf.renderFrameBlock();
-                }
                 CFRelease(pixelBuffer);
             });
 	}

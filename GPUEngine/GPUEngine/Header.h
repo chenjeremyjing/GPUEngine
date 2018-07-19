@@ -11,6 +11,7 @@
 #define Header_h
 
 #import "NUMAMultiplyBlendFilter.h"
+#import "GPUImageMovie+RenderBlock.h"
 
 #define panelSize CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.width)
 
