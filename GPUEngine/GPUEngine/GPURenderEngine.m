@@ -41,7 +41,7 @@ static GPURenderEngine *engine = nil;
         engine.fillRendereTask = [[FillFilterRenderTask alloc] init];
         engine.maskRenderTask = [[MaskRenderTask alloc] init];
         engine.maskFilter = [[FillMaskFilter alloc] init];
-        engine.blendFilter = [[GPUImageMultiplyBlendFilter alloc] init];
+        engine.blendFilter = [[NUMAMultiplyBlendFilter alloc] init];
     });
     return engine;
 }
@@ -51,13 +51,15 @@ static GPURenderEngine *engine = nil;
 - (void)updateBaseResourceWithImage:(UIImage *)baseImage
 {
     self.baseRenderTask.baseTexture = [[GPUImagePicture alloc] initWithImage:baseImage];
+    self.baseRenderTask.renderSize = self.baseRenderTask.baseTexture.outputImageSize;
     self.maskRenderTask.colorMaskTexture = self.baseRenderTask.colorMaskfilter;
+    [self updateBaseWithTransform:CATransform3DIdentity];
     [self processAll];
 }
 
 - (void)updateBaseWithTransform:(CATransform3D)transform
 {
-    self.baseRenderTask.baseTransform = transform;
+    self.baseRenderTask.baseTransform = CATransform3DConcat(transform, [self setContentModeAspectToFitWithSize:self.baseRenderTask.renderSize]);
 }
 
 - (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
@@ -78,7 +80,10 @@ static GPURenderEngine *engine = nil;
 //填充
 - (void)updateFillResourceWithImage:(UIImage *)fillImage
 {
-    self.fillRendereTask.fillTexture = [[GPUImagePicture alloc] initWithImage:fillImage];
+    GPUImagePicture *fillTexture = [[GPUImagePicture alloc] initWithImage:fillImage];
+    self.fillRendereTask.fillTexture = fillTexture;
+    self.fillRendereTask.renderSize = fillTexture.outputImageSize;
+    [self updateFillWithTransform:CATransform3DIdentity];
     [self processAll];
 
 }
@@ -87,13 +92,15 @@ static GPURenderEngine *engine = nil;
 {
     AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:videoAsset];
     self.fillRendereTask.fillTexture = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    self.fillRendereTask.renderSize = videoAsset.naturalSize;
+    [self updateFillWithTransform:CATransform3DIdentity];
     [self processAll];
 
 }
 
 - (void)updateFillWithTransform:(CATransform3D)transform
 {
-    self.fillRendereTask.fillTransform = transform;
+    self.fillRendereTask.fillTransform = CATransform3DConcat(transform, [self setContentModeAspectToFitWithSize:self.fillRendereTask.renderSize]);
 }
 
 - (void)updateFillCompensationColor:(UIColor *)compensationColor
@@ -168,10 +175,10 @@ static GPURenderEngine *engine = nil;
 //    self.maskRenderTask.textMaskHidden = isHidden;
 //    self.maskRenderTask.colorMaskHidden = !isHidden;
 //    self.maskFilter.eraserHighlight = isHidden;
-    self.maskRenderTask.eraserMaskHidden = YES;
-    self.maskRenderTask.textMaskHidden = NO;
-    self.maskRenderTask.colorMaskHidden = YES;
-    self.maskFilter.eraserHighlight = isHidden;
+    self.maskRenderTask.eraserMaskHidden = !isHidden;
+    self.maskRenderTask.textMaskHidden = !isHidden;
+    self.maskRenderTask.colorMaskHidden = NO;
+    self.maskFilter.eraserHighlight = !isHidden;
 }
 
 - (void)setFillVideoSpeed:(GPUVideoSpeedType)speed
@@ -207,36 +214,63 @@ static GPURenderEngine *engine = nil;
     [self.baseRenderTask addTarget:self.blendFilter];
     [self.maskFilter addTarget:self.blendFilter];
     [self.blendFilter addTarget:self.gView];
-
-    if (self.fillRendereTask.hasAnimationVideo) {
-        [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-            [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
-                
-            }];
-            [self.maskRenderTask processAllWithRenderBlock:nil];
-        }];
-    } else
-    {
-        if (self.baseRenderTask.hasAnimationVideo) {
-            [self.baseRenderTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-                [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-                    
-                }];
-                [self.maskRenderTask processAllWithRenderBlock:nil];
-            }];
-        } else
-        {
-            [self.baseRenderTask processAllWithRenderBlock:nil];
-            [self.fillRendereTask processAllWithRenderBlock:nil];
-            [self.maskRenderTask processAllWithRenderBlock:nil];
-        }
-    }
     
+    [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+        NSLog(@"rendering----------");
+        [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
+            
+        }];
+        [self.maskRenderTask processAllWithRenderBlock:nil];
+    }];
+
+//    if (self.fillRendereTask.hasAnimationVideo) {
+//        [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+//            [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
+//
+//            }];
+//            [self.maskRenderTask processAllWithRenderBlock:nil];
+//        }];
+//    } else
+//    {
+//        if (self.baseRenderTask.hasAnimationVideo) {
+//            [self.baseRenderTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+//                [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+//
+//                }];
+//                [self.maskRenderTask processAllWithRenderBlock:nil];
+//            }];
+//        } else
+//        {
+//            [self.baseRenderTask processAllWithRenderBlock:nil];
+//            [self.fillRendereTask processAllWithRenderBlock:nil];
+//            [self.maskRenderTask processAllWithRenderBlock:nil];
+//        }
+//    }
+//
 }
 
 - (void)setRenderView:(GPUImageView *)renderView
 {
     self.gView = renderView;
+}
+
+- (CATransform3D)setContentModeAspectToFitWithSize:(CGSize)size
+{
+    double defaultRatio = panelSize.width / panelSize.height;
+    
+    double ratio = size.width / size.height;
+    
+    CGFloat scaleX, scaleY;
+    
+    if (ratio > defaultRatio) {
+        scaleX = ratio / defaultRatio;
+        scaleY = 1.0;
+    } else {
+        scaleX = 1.0;
+        scaleY = defaultRatio / ratio;
+    }
+    return CATransform3DMakeScale(scaleX, scaleY, 1);
+    
 }
 
 @end

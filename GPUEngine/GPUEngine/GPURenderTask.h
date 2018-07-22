@@ -13,6 +13,8 @@ typedef void(^RenderBlock)(BOOL hasAnimationVideo);
 
 @interface GPURenderTask : NSObject
 
+@property (nonatomic, assign) CGSize renderSize;
+
 @property (nonatomic, assign) BOOL hasAnimationVideo;
 
 - (void)addTarget:(id<GPUImageInput>)target;

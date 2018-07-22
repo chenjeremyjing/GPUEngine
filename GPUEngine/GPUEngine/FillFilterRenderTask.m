@@ -37,30 +37,50 @@
     self.renderBlock = renderBlock;
     __weak typeof(self) weakSelf = self;
     
-    if ([weakSelf.fillTexture isKindOfClass:[GPUImagePicture class]]) {
+    if ([weakSelf.fillTexture isKindOfClass:[GPUImageMovie class]]) {
+        weakSelf.renderBlock(YES);
+        GPUImageMovie *movie = (GPUImageMovie *)weakSelf.fillTexture;
+        if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
+            [movie startProcessing];
+            [weakSelf.player play];
+
+        }
+    } else {
+        weakSelf.renderBlock(NO);
         GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
         [pic processImage];
     }
-    
     [self.filterLinerStyleHelper startProcessWithRenderBlock:^(BOOL hasAnimationVideo) {
-        if ([weakSelf.fillTexture isKindOfClass:[GPUImageMovie class]]) {
-            weakSelf.renderBlock(YES);
-            GPUImageMovie *movie = (GPUImageMovie *)weakSelf.fillTexture;
-            if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
-                [movie startProcessing];
-                [weakSelf.player play];
-            }
-        } else {
-            weakSelf.renderBlock(hasAnimationVideo);
-            GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
-            [pic processImage];
-        }
+        
     }];
+    
+//    if ([weakSelf.fillTexture isKindOfClass:[GPUImagePicture class]]) {
+//        GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
+//        [pic processImage];
+//    }
+//
+//    [self.filterLinerStyleHelper startProcessWithRenderBlock:^(BOOL hasAnimationVideo) {
+//        if ([weakSelf.fillTexture isKindOfClass:[GPUImageMovie class]]) {
+//            weakSelf.renderBlock(YES);
+//            GPUImageMovie *movie = (GPUImageMovie *)weakSelf.fillTexture;
+//            if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
+//                [movie startProcessing];
+//                [weakSelf.player play];
+//            }
+//        } else {
+//            weakSelf.renderBlock(hasAnimationVideo);
+//            GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
+//            [pic processImage];
+//        }
+//    }];
     
 }
 
 - (void)setVideoSpeed:(GPUVideoSpeedType)speed{
     switch (speed) {
+        case GPUVideo4SpeedAccelerateType:
+            self.player.rate = 4.0;
+            break;
         case GPUVideo2SpeedAccelerateType:
             self.player.rate = 2.0;
             break;
@@ -69,6 +89,9 @@
             break;
         case GPUVideo2SpeedDecelerateType:
             self.player.rate = 0.5;
+            break;
+        case GPUVideo4SpeedDecelerateType:
+            self.player.rate = 0.25;
             break;
             
         default:
@@ -89,9 +112,10 @@
 }
 
 - (void)seekToTime:(CMTime)time {
+    
     [self.player seekToTime:time toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {
         if (finished) {
-            [self.player play];
+//            [self.player play];
         }
     }];
 }
@@ -105,6 +129,9 @@
         [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
         self.startTime = kCMTimeZero;
         self.endTime = self.player.currentItem.duration;
+        movie.renderFrameBlock = ^{
+            self.renderBlock(YES);
+        };
     }
     [_fillTexture addTarget:self.fillTransFilter];
     [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
@@ -153,9 +180,10 @@
         _player.volume = 0;
         __weak typeof (self)weakSelf = self;
         [_player addPeriodicTimeObserverForInterval:CMTimeMake(1, 1) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            NSLog(@"%f______%f",CMTimeGetSeconds(weakSelf.player.currentItem.currentTime),CMTimeGetSeconds(weakSelf.endTime));
             if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
                 [weakSelf.player seekToTime:weakSelf.startTime];
-                [weakSelf.player play];
+                weakSelf.player.rate = weakSelf.player.rate;
             }
         }];
     }

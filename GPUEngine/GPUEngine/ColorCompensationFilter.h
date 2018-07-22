@@ -9,5 +9,17 @@
 #import <GPUImage/GPUImage.h>
 
 @interface ColorCompensationFilter : GPUImageFilter
+{
+    GLint colorR_Uniform;
+    GLint colorG_Uniform;
+    GLint colorB_Uniform;
+    GLint colorAlpha_Uniform;
+    
+}
+
+@property(assign, nonatomic) CGFloat r;
+@property(assign, nonatomic) CGFloat g;
+@property(assign, nonatomic) CGFloat b;
+@property(assign, nonatomic) CGFloat a;
 
 @end

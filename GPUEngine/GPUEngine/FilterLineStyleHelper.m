@@ -76,18 +76,25 @@
         case FilterLineCartoonStyleType:
         {
             //风格滤镜脸所需滤镜
+            //饱和度
             GPUImageSaturationFilter *saturationfilter = [[GPUImageSaturationFilter alloc] init];
+            //对比度
             GPUImageContrastFilter *contrastfilter = [[GPUImageContrastFilter alloc] init];
+            //颜色补偿
             self.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
+            self.colorCompensationFilter.r = 1.0;
+            self.colorCompensationFilter.g = 1.0;
+            self.colorCompensationFilter.b = 1.0;
+            self.colorCompensationFilter.a = 0.0;
 
             [saturationfilter addTarget:contrastfilter];
             
             //动态视频混合滤镜
             self.animationBlendFilter = [[NUMAMultiplyBlendFilter alloc] init];
-            [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
+            [contrastfilter addTarget:self.colorCompensationFilter atTextureLocation:0];
             
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]]];
-            self.hasAnimationVideo = YES;
+//            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]]];
+            self.hasAnimationVideo = NO;
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;
@@ -98,20 +105,28 @@
             break;
         case FilterLineCityStyleType:
         {
+            //颜色补偿
             self.colorCompensationFilter = [[ColorCompensationFilter alloc] init];
+            self.colorCompensationFilter.r = 1.0;
+            self.colorCompensationFilter.g = 1.0;
+            self.colorCompensationFilter.b = 1.0;
+            self.colorCompensationFilter.a = 0.0;
+            
+            //饱和度
             GPUImageSaturationFilter *saturationfilter = [[GPUImageSaturationFilter alloc] init];
+            //对比度
             GPUImageContrastFilter *contrastfilter = [[GPUImageContrastFilter alloc] init];
             self.animationBlendFilter = [[NUMAMultiplyBlendFilter alloc]init];
             [saturationfilter addTarget:contrastfilter];
-            [contrastfilter addTarget:self.animationBlendFilter atTextureLocation:0];
-            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]]];
+            [contrastfilter addTarget:self.colorCompensationFilter atTextureLocation:0];
+//            self.playerItem = [[AVPlayerItem alloc] initWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]]];
             
             //模拟滤镜链
             self.firstAdjustFilter = saturationfilter;
             self.secondAdjustFilter = contrastfilter;
             self.prefixFilter = saturationfilter;
             self.sufixFilter = contrastfilter;
-            self.hasAnimationVideo = YES;
+            self.hasAnimationVideo = NO;
 
         }
             break;
@@ -153,7 +168,7 @@
 }
 
 - (GPUImageFilter *)sufixFilter {
-    return self.animationBlendFilter;
+    return self.colorCompensationFilter;
 }
 
 

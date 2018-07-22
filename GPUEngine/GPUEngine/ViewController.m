@@ -200,8 +200,6 @@ typedef NS_ENUM(NSInteger, currentTarget)
     } else if (self.editTarget == currentTargetFill) {
         [[GPURenderEngine renderEngine] updateBaseFilterStyleWithFilterStyle:FilterLineCartoonStyleType];
     }
-    
-
 }
 
 - (void)style:(UIButton *)sender
@@ -234,28 +232,33 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 - (void)timeLineOffset:(UISlider *)sender
 {
-    CGFloat second = sender.value * CMTimeGetSeconds(self.player.currentItem.duration);
+    AVAsset *videoAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]]];
+    
+    CGFloat duration = CMTimeGetSeconds(videoAsset.duration);
+    
+    
+    CGFloat second = sender.value * duration;
     int preferredTimeScale = 1 * NSEC_PER_SEC;
     CMTime currentTime = CMTimeMakeWithSeconds(second, preferredTimeScale);
-    [self.player seekToTime:currentTime];
-    CGFloat speed = self.speed * 2.0;
-    if (speed == -4) {
-        speed = 0.25;
-    } else if (speed == -2)
-    {
-        speed = 0.5;
-    } else if (speed == 0)
-    {
-        speed = 1;
-    } else if (speed == 2)
-    {
-        speed = 2;
-    } else if (speed == 4)
-    {
-        speed = 4;
-    }
-    self.player.rate = speed;
-//    [GPURenderEngine renderEngine] updatef
+//    [self.player seekToTime:currentTime];
+//    CGFloat speed = self.speed * 2.0;
+//    if (speed == -4) {
+//        speed = 0.25;
+//    } else if (speed == -2)
+//    {
+//        speed = 0.5;
+//    } else if (speed == 0)
+//    {
+//        speed = 1;
+//    } else if (speed == 2)
+//    {
+//        speed = 2;
+//    } else if (speed == 4)
+//    {
+//        speed = 4;
+//    }
+//    self.player.rate = speed;
+    [[GPURenderEngine renderEngine] seekToTime:currentTime];
 }
 
 - (void)hiddenFill:(UIButton *)sender
@@ -277,24 +280,30 @@ typedef NS_ENUM(NSInteger, currentTarget)
     [sender setTitle:[NSString stringWithFormat:@"speed%ld", (long)speed] forState:UIControlStateNormal];
     if (speed == -4) {
         speed = 0.25;
+        [[GPURenderEngine renderEngine] setFillVideoSpeed:GPUVideo4SpeedDecelerateType];
     } else if (speed == -2)
     {
         speed = 0.5;
+        [[GPURenderEngine renderEngine] setFillVideoSpeed:GPUVideo2SpeedDecelerateType];
     } else if (speed == 0)
     {
         speed = 1;
+        [[GPURenderEngine renderEngine] setFillVideoSpeed:GPUVideoSpeedNormalType];
     } else if (speed == 2)
     {
         speed = 2;
+        [[GPURenderEngine renderEngine] setFillVideoSpeed:GPUVideo2SpeedAccelerateType];
+
     } else if (speed == 4)
     {
         speed = 4;
+        [[GPURenderEngine renderEngine] setFillVideoSpeed:GPUVideo4SpeedAccelerateType];
     }
     
     
     NSLog(@"speed%f",speed);
     
-    self.player.rate = speed;
+//    self.player.rate = speed;
     
 }
 
@@ -323,6 +332,10 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 - (void)engine {
     
+    AVAsset *videoAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]]];
+    
+    CGFloat duration = CMTimeGetSeconds(videoAsset.duration);
+    
     GPURenderEngine *renderEngine = [GPURenderEngine renderEngine];
     [renderEngine setRenderView:gView];
     render_color maskColor = {
@@ -331,19 +344,17 @@ typedef NS_ENUM(NSInteger, currentTarget)
         0.1,
         0.1
     };
-    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"base"]];
+    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"fill"]];
     //baseColorSelectMask
     [renderEngine updateColorMaskColorAndTolerance:maskColor];
     //base
-    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"base"]];
+    [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"fill"]];
     [renderEngine updateBaseFilterStyleWithFilterStyle:FilterLineCartoonStyleType];
-//    [renderEngine updateBaseWithTransform:[self setContentModeAspectToFitWithSize:pic.outputImageSize]];
     //fill
-//    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"fillV" ofType:@".mp4"]];
-//    [renderEngine updateFillResourceWithVideoAsset:[AVAsset assetWithURL:url]];
-    [renderEngine updateFillResourceWithImage:[UIImage imageNamed:@"fill"]];
+    [renderEngine updateFillResourceWithVideoAsset:videoAsset];
     [renderEngine updateFillFilterStyleWithFilterStyle:FilterLineCityStyleType];
-//    [renderEngine updateFillWithTransform:[self setContentModeAspectToFitWithSize:pic.outputImageSize]];
+    [renderEngine setFillVideoStartTime:kCMTimeZero];
+    [renderEngine setFillVideoEndTime:videoAsset.duration];
 
     //textMask
     [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b10"]];
@@ -361,6 +372,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
 
 - (void)test
 {
+    
     self.textTrans = [[GPUImageTransformFilter alloc] init];
     //    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"base"]];
     //
@@ -537,25 +549,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
 }
 
 
-- (CATransform3D)setContentModeAspectToFitWithSize:(CGSize)size
-{
-    double defaultRatio = gView.frame.size.width / gView.frame.size.height;
-    
-    double ratio = size.width / size.height;
-    
-    
-    CGFloat scaleX, scaleY;
-    
-    if (ratio > defaultRatio) {
-        scaleX = 1.0;
-        scaleY = defaultRatio / ratio;
-    } else {
-        scaleX = ratio / defaultRatio;
-        scaleY = 1.0;
-    }
-    return CATransform3DMakeScale(scaleX, scaleY, 1);
-    
-}
+
 
 - (void)resetEraseData {
     
@@ -581,7 +575,7 @@ typedef NS_ENUM(NSInteger, currentTarget)
     }
     CGContextSetShouldAntialias(context, true);
     CGContextSetAllowsAntialiasing(context, true);
-    CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:1 green:0 blue:0 alpha:0.5] CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:1 green:1 blue:1 alpha:0.0] CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, panelSize.width, panelSize.height));
     CGContextTranslateCTM(context, 0, panelSize.height);
     CGContextScaleCTM(context, 1.0f, -1.0f);
