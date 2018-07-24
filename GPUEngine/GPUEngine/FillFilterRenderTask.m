@@ -23,6 +23,7 @@
 
 @property (nonatomic, copy) RenderBlock renderBlock;
 
+@property (nonatomic, copy) void(^videoWriteCompletionHandler)();
 
 @end
 
@@ -43,7 +44,6 @@
         if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
             [movie startProcessing];
             [weakSelf.player play];
-
         }
     } else {
         weakSelf.renderBlock(NO);
@@ -74,6 +74,16 @@
 //        }
 //    }];
     
+}
+
+- (void)updateStyleFilterLineParamValueOne:(CGFloat)valueOne
+{
+//    self.filterLinerStyleHelper.firstAdjustFilter.
+}
+
+- (void)updateStyleFilterLineParamValueTwo:(CGFloat)valueTwo
+{
+    //    self.filterLinerStyleHelper.firstAdjustFilter.
 }
 
 - (void)setVideoSpeed:(GPUVideoSpeedType)speed{
@@ -120,18 +130,34 @@
     }];
 }
 
+- (void)startVideoWritingWithStartHanler:(void(^)())startHanler completionHandler:(void(^)())completionHanler
+{
+    self.videoWriteCompletionHandler = completionHanler;
+    [self.player seekToTime:self.startTime completionHandler:^(BOOL finished) {
+        if (startHanler) {
+            startHanler();
+        }
+    }];
+}
+
 #pragma mark -- Setter && Getter
 - (void)setFillTexture:(GPUImageOutput *)fillTexture {
     [_fillTexture removeAllTargets];
     _fillTexture = fillTexture;
     if ([fillTexture isKindOfClass:[GPUImageMovie class]]) {
         GPUImageMovie *movie = (GPUImageMovie *)fillTexture;
+        movie.runBenchmark = YES;
+        movie.playAtActualSpeed = YES;
         [self.player replaceCurrentItemWithPlayerItem:movie.playerItem];
         self.startTime = kCMTimeZero;
         self.endTime = self.player.currentItem.duration;
         movie.renderFrameBlock = ^{
             self.renderBlock(YES);
         };
+        
+        //更新滤镜链最新添加的播放器和视频
+        [GPURenderEngine renderEngine].lastMovie = movie;
+        [GPURenderEngine renderEngine].lastVideoPlayer = self.player;
     }
     [_fillTexture addTarget:self.fillTransFilter];
     [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
@@ -184,6 +210,12 @@
             if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.endTime)) {
                 [weakSelf.player seekToTime:weakSelf.startTime];
                 weakSelf.player.rate = weakSelf.player.rate;
+                
+                //是否正在写入本地
+                if (weakSelf.videoWriteCompletionHandler) {
+                    weakSelf.videoWriteCompletionHandler();
+                    weakSelf.videoWriteCompletionHandler = nil;
+                }
             }
         }];
     }

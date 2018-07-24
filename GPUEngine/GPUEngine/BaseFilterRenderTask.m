@@ -27,6 +27,16 @@
     [self.filterLinerStyleHelper.sufixFilter addTarget:target];
 }
 
+- (void)updateStyleFilterLineParamValueOne:(CGFloat)valueOne
+{
+    //    self.filterLinerStyleHelper.firstAdjustFilter.
+}
+
+- (void)updateStyleFilterLineParamValueTwo:(CGFloat)valueTwo
+{
+    //    self.filterLinerStyleHelper.firstAdjustFilter.
+}
+
 #pragma mark -- Setter && Getter
 - (GPUImageTransformFilter *)baseTransFilter {
     if (!_baseTransFilter) {

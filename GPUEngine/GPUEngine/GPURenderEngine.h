@@ -14,6 +14,14 @@
 
 @interface GPURenderEngine : NSObject
 
+//最后添加的动态视频纹理
+@property (nonatomic, strong) GPUImageMovie *lastMovie;
+
+//最后添加的动态视频纹理播放器
+@property (nonatomic, strong) AVPlayer *lastVideoPlayer;
+
+
+//单利初始化方法
 + (instancetype)renderEngine;
 
 /**

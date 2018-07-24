@@ -157,14 +157,30 @@
     
     [self.player pause];
     [self.player replaceCurrentItemWithPlayerItem:_playerItem];
+    
+    //更新滤镜链最新添加的播放器和视频
+    [GPURenderEngine renderEngine].lastMovie = self.animtaionMovie;
+    [GPURenderEngine renderEngine].lastVideoPlayer = self.player;
 }
 
 - (void)setCompensationColor:(UIColor *)compensationColor {
     _compensationColor = compensationColor;
+    CGFloat r = 0.0;
+    CGFloat g = 0.0;
+    CGFloat b = 0.0;
+    CGFloat a = 0.0;
+    BOOL parserColor = [compensationColor getRed:&r green:&g blue:&b alpha:&a];
+    if (parserColor) {
+        self.colorCompensationFilter.r = r;
+        self.colorCompensationFilter.g = g;
+        self.colorCompensationFilter.b = b;
+        self.colorCompensationFilter.a = a;
+    }
 }
 
 - (void)setCompensationAlpha:(CGFloat)compensationAlpha {
     _compensationAlpha = compensationAlpha;
+    self.colorCompensationFilter.a = compensationAlpha;
 }
 
 - (GPUImageFilter *)sufixFilter {

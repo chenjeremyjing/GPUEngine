@@ -173,6 +173,21 @@ typedef NS_ENUM(NSInteger, currentTarget)
     _styleFilterSlider2.maximumValue = +0.1;
     [_styleFilterSlider2 addTarget:self action:@selector(filterValue2:) forControlEvents:UIControlEventValueChanged];
     
+    UIButton *saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [saveBtn setTitle:@"SAVE" forState:UIControlStateNormal];
+    [saveBtn addTarget:self action:@selector(save:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:saveBtn];
+    saveBtn.bounds = CGRectMake(0, 0, 80, 30);
+    saveBtn.center = CGPointMake(self.view.bounds.size.width / 2, CGRectGetMaxY(self.view.frame) - 100);
+    saveBtn.selected = NO;
+    
+}
+
+- (void)save:(UIButton *)sender
+{
+    [[GPURenderEngine renderEngine] exportWithCachePath:[[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:@"test.mp4"] andProcessingBlock:^(CGFloat progress) {
+        NSLog(@"____save____progress:%f", progress);
+    }];
 }
 
 - (void)colorAlpha:(UISlider *)sender

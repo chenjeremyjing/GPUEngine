@@ -26,9 +26,14 @@
 //风格纯色补偿 不透明度
 @property (nonatomic, assign) CGFloat compensationAlpha;
 
+- (void)updateStyleFilterLineParamValueOne:(CGFloat)valueOne;
+- (void)updateStyleFilterLineParamValueTwo:(CGFloat)valueTwo;
+
 - (void)setVideoSpeed:(GPUVideoSpeedType)speed;
 - (void)setVideoStartTime:(CMTime)startTime;
 - (void)setVideoEndTime:(CMTime)endTime;
 - (void)seekToTime:(CMTime)time;
+
+- (void)startVideoWritingWithStartHanler:(void(^)())startHanler completionHandler:(void(^)())completionHanler;
 
 @end

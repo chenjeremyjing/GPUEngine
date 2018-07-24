@@ -30,4 +30,7 @@
 //底图颜色轮廓输出
 @property (nonatomic, strong) ColorMaskFilter *colorMaskfilter;
 
+- (void)updateStyleFilterLineParamValueOne:(CGFloat)valueOne;
+- (void)updateStyleFilterLineParamValueTwo:(CGFloat)valueTwo;
+
 @end

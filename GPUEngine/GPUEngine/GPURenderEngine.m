@@ -22,10 +22,13 @@
 
 @property (nonatomic, strong) GPUImageTwoInputFilter *blendFilter;
 
+@property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
+
 @property (nonatomic, strong) FillMaskFilter *maskFilter;
 
 @property (nonatomic, strong) GPUImageView *gView;
 
+@property (nonatomic, copy) void(^saveVideoHandle)();
 
 @end
 
@@ -70,12 +73,13 @@ static GPURenderEngine *engine = nil;
 
 - (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
 {
-    
+    [self.fillRendereTask updateStyleFilterLineParamValueOne:adjustValue];
 }
 - (void)updateBaseFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue
 {
-    
+    [self.fillRendereTask updateStyleFilterLineParamValueTwo:adjustValue];
 }
+
 
 //填充
 - (void)updateFillResourceWithImage:(UIImage *)fillImage
@@ -91,7 +95,8 @@ static GPURenderEngine *engine = nil;
 - (void)updateFillResourceWithVideoAsset:(AVAsset *)videoAsset
 {
     AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithAsset:videoAsset];
-    self.fillRendereTask.fillTexture = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    GPUImageMovie *movie = [[GPUImageMovie alloc] initWithPlayerItem:playerItem];
+    self.fillRendereTask.fillTexture = movie;    
     self.fillRendereTask.renderSize = videoAsset.naturalSize;
     [self updateFillWithTransform:CATransform3DIdentity];
     [self processAll];
@@ -120,11 +125,11 @@ static GPURenderEngine *engine = nil;
 }
 - (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
 {
-    
+    [self.fillRendereTask updateStyleFilterLineParamValueOne:adjustValue];
 }
 - (void)updateFillFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue
 {
-    
+    [self.fillRendereTask updateStyleFilterLineParamValueTwo:adjustValue];
 }
 
 - (void)seekToTime:(CMTime)time
@@ -171,10 +176,6 @@ static GPURenderEngine *engine = nil;
 }
 - (void)setMaskAndFillHidden:(BOOL)isHidden
 {
-//    self.maskRenderTask.eraserMaskHidden = isHidden;
-//    self.maskRenderTask.textMaskHidden = isHidden;
-//    self.maskRenderTask.colorMaskHidden = !isHidden;
-//    self.maskFilter.eraserHighlight = isHidden;
     self.maskRenderTask.eraserMaskHidden = !isHidden;
     self.maskRenderTask.textMaskHidden = !isHidden;
     self.maskRenderTask.colorMaskHidden = NO;
@@ -195,6 +196,36 @@ static GPURenderEngine *engine = nil;
 }
 
 - (void)exportWithCachePath:(NSString *)cachePath andProcessingBlock:(processingBlock)progressBlock{
+    
+    if ([self.fillRendereTask.fillTexture isKindOfClass:[GPUImageMovie class]]) {
+        
+        //移除当前视频
+        [[NSFileManager defaultManager] removeItemAtURL:[NSURL fileURLWithPath:cachePath] error:nil];
+        
+        //视频写入
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[NSURL fileURLWithPath:cachePath] size:panelSize];
+        _movieWriter.hasAudioTrack = NO;
+        _movieWriter.shouldPassthroughAudio = NO;
+        [self.blendFilter addTarget:_movieWriter];
+
+        GPUImageMovie *fillMovie = (GPUImageMovie *)self.fillRendereTask.fillTexture;
+//        fillMovie.audioEncodingTarget = _movieWriter;
+        [fillMovie enableSynchronizedEncodingUsingMovieWriter:_movieWriter];
+        [self.fillRendereTask startVideoWritingWithStartHanler:^{
+            [_movieWriter startRecording];
+        } completionHandler:^{
+            [_movieWriter finishRecording];
+            [self saveVideoToAlbum:[NSURL fileURLWithPath:cachePath] handler:^{
+                progressBlock(1.0);
+            }];
+        }];
+    } else {
+        [self processAll];
+        [self.blendFilter useNextFrameForImageCapture];
+        UIImage *finalImg = [self.blendFilter imageFromCurrentFramebuffer];
+        NSData *finalData = UIImagePNGRepresentation(finalImg);
+        [finalData writeToURL:[NSURL fileURLWithPath:cachePath] atomically:YES];
+    }
     
 }
 
@@ -271,6 +302,48 @@ static GPURenderEngine *engine = nil;
     }
     return CATransform3DMakeScale(scaleX, scaleY, 1);
     
+}
+
+- (void)saveVideoToAlbum:(NSURL *)videoPath handler:(void(^)())handler {
+    if (videoPath) {
+        [self checkPhotoLibraryAuthorityWithCompletionBlock:^{
+            _saveVideoHandle = handler;
+            if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum([videoPath path])) {
+                UISaveVideoAtPathToSavedPhotosAlbum([videoPath path], self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+            }
+        }];
+    }
+}
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (!error) {
+        if (_saveVideoHandle) {
+            _saveVideoHandle(YES);
+        }
+    } else {
+        if (_saveVideoHandle) {
+            _saveVideoHandle(NO);
+        }
+    }
+}
+
+- (void)checkPhotoLibraryAuthorityWithCompletionBlock:(void (^)(void))completionBlock {
+    PHAuthorizationStatus authStatus = [PHPhotoLibrary authorizationStatus];
+    if (authStatus == PHAuthorizationStatusAuthorized) {
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock();
+            });
+        }
+    } else if (authStatus == PHAuthorizationStatusDenied || authStatus == PHAuthorizationStatusRestricted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIAlertView *authorityAlert = [[UIAlertView alloc] initWithTitle:@"请打开相册的访问权限" message:@"设置-隐私-相册" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
+            [authorityAlert show];
+        });
+    } else if (authStatus == PHAuthorizationStatusNotDetermined) {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            [self checkPhotoLibraryAuthorityWithCompletionBlock:completionBlock];
+        }];
+    }
 }
 
 @end
