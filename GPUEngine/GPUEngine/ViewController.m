@@ -12,12 +12,7 @@
 #import "ColorMaskFilter.h"
 #import "MaskMixFilter.h"
 
-typedef NS_ENUM(NSInteger, currentTarget)
-{
-    currentTargetBase,
-    currentTargetFill,
-    currentTargetText,
-};
+
 
 @interface ViewController ()
 {

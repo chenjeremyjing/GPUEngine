@@ -34,6 +34,15 @@ struct render_color {
 };
 typedef struct render_color render_color;
 
+typedef NS_ENUM(NSInteger, currentTarget)
+{
+    currentTargetBase,
+    currentTargetFill,
+    currentTargetText,
+    currentTargetEraser,
+
+};
+
 #import "GPURenderEngine.h"
 
 #endif /* Header_h */

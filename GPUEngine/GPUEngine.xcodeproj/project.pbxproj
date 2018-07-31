@@ -51,6 +51,9 @@
 		3F4CA4DD20F8A847003C1FD0 /* fillV.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DA20F8A846003C1FD0 /* fillV.mp4 */; };
 		3F4CA4DE20F8A847003C1FD0 /* fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DB20F8A846003C1FD0 /* fill.png */; };
 		3F4CA4DF20F8A847003C1FD0 /* 效果.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */; };
+		3F6E95A7211065CD005FAEAE /* NUMARenderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E95A6211065CD005FAEAE /* NUMARenderView.m */; };
+		3F6E95AD21107EFA005FAEAE /* NUMAEraserProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E95AC21107EFA005FAEAE /* NUMAEraserProcess.m */; };
+		3FA250BF2109723C00AB0F81 /* NUMAEraserFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA250BE2109723C00AB0F81 /* NUMAEraserFilter.m */; };
 		3FCE3ADA20E5262C005B6D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3AD920E5262C005B6D17 /* main.m */; };
 		3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */; };
 		3FCE3AE020E5262C005B6D17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADF20E5262C005B6D17 /* ViewController.m */; };
@@ -118,6 +121,12 @@
 		3F4CA4DA20F8A846003C1FD0 /* fillV.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = fillV.mp4; sourceTree = "<group>"; };
 		3F4CA4DB20F8A846003C1FD0 /* fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fill.png; sourceTree = "<group>"; };
 		3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "效果.mp4"; sourceTree = "<group>"; };
+		3F6E95A5211065CD005FAEAE /* NUMARenderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMARenderView.h; sourceTree = "<group>"; };
+		3F6E95A6211065CD005FAEAE /* NUMARenderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMARenderView.m; sourceTree = "<group>"; };
+		3F6E95AB21107EFA005FAEAE /* NUMAEraserProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAEraserProcess.h; sourceTree = "<group>"; };
+		3F6E95AC21107EFA005FAEAE /* NUMAEraserProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAEraserProcess.m; sourceTree = "<group>"; };
+		3FA250BD2109723C00AB0F81 /* NUMAEraserFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAEraserFilter.h; sourceTree = "<group>"; };
+		3FA250BE2109723C00AB0F81 /* NUMAEraserFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAEraserFilter.m; sourceTree = "<group>"; };
 		3FCE3AD520E5262B005B6D17 /* GPUEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FCE3AD920E5262C005B6D17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -234,8 +243,14 @@
 			children = (
 				3F4CA49220F4D3B9003C1FD0 /* 1510611252017091210art38771 */,
 				3FCE3D7520F4F420005B6D17 /* Header.h */,
+				3F6E95AB21107EFA005FAEAE /* NUMAEraserProcess.h */,
+				3F6E95AC21107EFA005FAEAE /* NUMAEraserProcess.m */,
 				3F26A2F820FC3949003A39BE /* NUMAMultiplyBlendFilter.h */,
 				3F26A2F920FC3949003A39BE /* NUMAMultiplyBlendFilter.m */,
+				3FA250BD2109723C00AB0F81 /* NUMAEraserFilter.h */,
+				3FA250BE2109723C00AB0F81 /* NUMAEraserFilter.m */,
+				3F6E95A5211065CD005FAEAE /* NUMARenderView.h */,
+				3F6E95A6211065CD005FAEAE /* NUMARenderView.m */,
 				3FCE3ADB20E5262C005B6D17 /* AppDelegate.h */,
 				3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */,
 				3FCE3ADE20E5262C005B6D17 /* ViewController.h */,
@@ -462,10 +477,13 @@
 				3F394E1420EA10020056B239 /* MaskRenderTask.m in Sources */,
 				3F26A30021003451003A39BE /* GPUImageMovie+RenderBlock.m in Sources */,
 				3F394E0F20EA10020056B239 /* ColorCompensationFilter.m in Sources */,
+				3F6E95AD21107EFA005FAEAE /* NUMAEraserProcess.m in Sources */,
 				3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */,
+				3FA250BF2109723C00AB0F81 /* NUMAEraserFilter.m in Sources */,
 				3F394E0D20EA10020056B239 /* FilterLineStyleHelper.m in Sources */,
 				3F394E1520EA10020056B239 /* GPURenderTask.m in Sources */,
 				3F394E1020EA10020056B239 /* FillMaskFilter.m in Sources */,
+				3F6E95A7211065CD005FAEAE /* NUMARenderView.m in Sources */,
 				3FCE3AF120E5269D005B6D17 /* GPURenderEngine.m in Sources */,
 				3FCE3ADA20E5262C005B6D17 /* main.m in Sources */,
 				3F394E0E20EA10020056B239 /* FillFilterRenderTask.m in Sources */,
