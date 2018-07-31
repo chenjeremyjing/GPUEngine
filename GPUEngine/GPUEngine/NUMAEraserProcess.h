@@ -17,7 +17,7 @@
  @param eraserData 橡皮擦地址
  @param size 橡皮擦大小
  */
-+ (void)resetEraseDataWithData:(char *)eraserData size:(CGSize)size;
++ (void)resetEraseDataWithData:(unsigned char *)eraserData size:(CGSize)size;
 
 
 /**
@@ -35,7 +35,7 @@
  @param rotation 旋转
  @return 橡皮擦
  */
-+ (UIImage *)updateEraseDataWithData:(char *)eraserData
++ (UIImage *)updateEraseDataWithData:(unsigned char *)eraserData
                           eraserSize:(CGSize)eraserSize
                            strokeImg:(UIImage *)strokeImg
                       eraseTouchSize:(CGFloat)eraseTouchSize

@@ -11,13 +11,15 @@
 #import "GPURenderEngine.h"
 #import "ColorMaskFilter.h"
 #import "MaskMixFilter.h"
-
-
+#import "NUMARenderView.h"
+#import "NUMAEraserProcess.h"
 
 @interface ViewController ()
 {
     GPUImagePicture *pic;
-    GPUImageView *gView;
+    NUMARenderView *gView;
+    UILabel *label;
+    UIView *textView;
     UISlider *_videoTimeLine;
     
     GPUImagePicture *mask1;
@@ -62,7 +64,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self resetEraseData];
+    [NUMAEraserProcess resetEraseDataWithData:self.eraseData size:panelSize];
     
     self.view.backgroundColor = [UIColor greenColor];
     
@@ -74,25 +76,53 @@
     
     [self setupFilters];
     
+    UITextField *textF  = [[UITextField alloc] initWithFrame:CGRectMake(100, CGRectGetMaxY(self.view.bounds) - 50, 200, 50)];
+    [self.view addSubview:textF];
+    [textF addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
     
 }
 
 - (void)initSubviews
 {
-    gView = [[GPUImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
+    gView = [[NUMARenderView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
     gView.fillMode = kGPUImageFillModeStretch;
     gView.backgroundColor = [UIColor clearColor];
     gView.opaque = NO;
     [self.view addSubview:gView];
     
-    UIPanGestureRecognizer *panGes = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-    [gView addGestureRecognizer:panGes];
+    textView = [[UIView alloc] initWithFrame:gView.bounds];
+    label = [[UILabel alloc] init];
+    label.center = textView.center;
+    label.bounds = textView.bounds;
+    label.text = @"天使是这样的";
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont boldSystemFontOfSize:30];
+    [textView addSubview:label];
     
-    UIPinchGestureRecognizer *pinchGes = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGes:)];
-    [gView addGestureRecognizer:pinchGes];
+    [gView renderWithTransformHandler:^(CATransform3D transform, currentTarget targetType) {
+        switch (targetType) {
+            case currentTargetBase:
+                [[GPURenderEngine renderEngine] updateBaseWithTransform:transform];
+                
+                break;
+            case currentTargetFill:
+                [[GPURenderEngine renderEngine] updateFillWithTransform:transform];
+                
+                break;
+            case currentTargetText:
+                [[GPURenderEngine renderEngine] updateTextMaskWithTransform:transform];
+                
+                break;
+                
+            default:
+                break;
+        }
+    }];
     
-    UIRotationGestureRecognizer *rotateGes = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotateGes:)];
-    [gView addGestureRecognizer:rotateGes];
+    [gView eraserActionWithHandler:^(CGPoint currentLocation, CGPoint preLocation) {
+        [NUMAEraserProcess updateEraseDataWithData:_eraseData eraserSize:panelSize strokeImg:[UIImage imageNamed:@""] eraseTouchSize:20 eraseType:YES eraseTouchOpacity:0.5 lastPoint:preLocation currentPoint:currentLocation touchSpeed:1 rotation:0];
+        [[GPURenderEngine renderEngine] updateEraserMaskWithEraserRawData:self.eraseData];
+    }];
     
     UIButton *targetSwitchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [targetSwitchBtn setTitle:@"Base" forState:UIControlStateNormal];
@@ -320,7 +350,7 @@
 - (void)switchTarget:(UIButton *)sender
 {
     self.editTarget++;
-    if (self.editTarget > 2) {
+    if (self.editTarget > 3) {
         self.editTarget = 0;
     }
     switch (self.editTarget) {
@@ -333,11 +363,21 @@
         case currentTargetText:
             [sender setTitle:@"Mask" forState:UIControlStateNormal];
             break;
+        case currentTargetEraser:
+            [sender setTitle:@"Eraser" forState:UIControlStateNormal];
+            break;
             
         default:
             break;
     }
+    
+    gView.editTarget = self.editTarget;
 
+}
+
+-(void)textChanged:(UITextField *)sender
+{
+    label.text = sender.text;
 }
 
 - (void)engine {
@@ -367,233 +407,15 @@
     [renderEngine setFillVideoEndTime:videoAsset.duration];
 
     //textMask
-    [renderEngine updateTextMaskWithTextImage:[UIImage imageNamed:@"b10"]];
+    [renderEngine updateTextMaskWithTextView:textView];
     
     //eraserMask
     [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
+    
 }
 
 - (void)setupFilters {
-    
     [self engine];
-
-    [self test];
-}
-
-- (void)test
-{
-    
-    self.textTrans = [[GPUImageTransformFilter alloc] init];
-    //    pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"base"]];
-    //
-    self.baseTrans = [[GPUImageTransformFilter alloc] init];
-    //    self.baseTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
-    //
-    //    self.blendFilter = [[NUMAMultiplyBlendFilter alloc] init];
-    //
-    //    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]];
-    //
-    //    AVPlayerItem *item = [AVPlayerItem playerItemWithURL:url];
-    //    self.player = [[AVPlayer alloc] initWithPlayerItem:item];
-    //    _player.rate = 1.0;
-    //    _player.volume = 0;
-    //
-    //    if (self.player.currentItem.status == AVPlayerItemStatusReadyToPlay) {
-    //        NSLog(@"dssd");
-    //    }
-    //    __weak typeof(self) weakSelf = self;
-    //    [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-    //
-    //        CGFloat duration = CMTimeGetSeconds(weakSelf.player.currentItem.duration);
-    //        CGFloat current = CMTimeGetSeconds(weakSelf.player.currentItem.currentTime);
-    //
-    //        weakSelf.videoTimeLine.value = current / duration;
-    //
-    //        if (CMTimeGetSeconds(weakSelf.player.currentItem.currentTime) == CMTimeGetSeconds(weakSelf.player.currentItem.duration)) {
-    //            [weakSelf.player pause];
-    //            [weakSelf.player seekToTime:kCMTimeZero];
-    //            CGFloat speed = self.speed * 2.0;
-    //            if (speed == -4) {
-    //                speed = 0.25;
-    //            } else if (speed == -2)
-    //            {
-    //                speed = 0.5;
-    //            } else if (speed == 0)
-    //            {
-    //                speed = 1;
-    //            } else if (speed == 2)
-    //            {
-    //                speed = 2;
-    //            } else if (speed == 4)
-    //            {
-    //                speed = 4;
-    //            }
-    //            [weakSelf.player play];
-    //            weakSelf.player.rate = speed;
-    //        }
-    //
-    //    }];
-    //
-    //    GPUImageMovie *movie = [[GPUImageMovie alloc] initWithPlayerItem:item];
-    //    movie.runBenchmark = YES;
-    //    movie.playAtActualSpeed = YES;
-    //
-    //
-    self.FillTrans = [[GPUImageTransformFilter alloc] init];
-    //    self.FillTrans.transform3D = [self setContentModeAspectToFitWithSize:pic.outputImageSize];
-    //
-    //    [pic addTarget:self.baseTrans];
-    //    [movie addTarget:self.FillTrans];
-    //    [self.baseTrans addTarget:self.blendFilter atTextureLocation:0];
-    //    [self.FillTrans addTarget:self.blendFilter atTextureLocation:1];
-    //
-    //    [pic processImage];
-    //
-    //    [self.blendFilter addTarget:gView];
-    //
-    //    [movie startProcessing];
-    //    movie.renderFrameBlock = ^{
-    //        [pic processImage];
-    //    };
-    //
-    //    [self.player play];
-}
-- (void)pan:(UIPanGestureRecognizer *)sender {
-    CGPoint point = [sender locationInView:sender.view];
-    if (sender.state == UIGestureRecognizerStateBegan)
-    {
-        self.lastPoint = point;
-    }
-    
-    
-    switch (self.editTarget) {
-        case currentTargetBase:
-            {
-                CATransform3D transform = self.baseTrans.transform3D;
-                transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
-                transform.m42 = transform.m42 + (point.y - self.lastPoint.y)/self.view.frame.size.width*2;
-                self.baseTrans.transform3D = transform;
-                [[GPURenderEngine renderEngine] updateBaseWithTransform:transform];
-            }
-            break;
-        case currentTargetFill:
-        {
-            CATransform3D transform = self.FillTrans.transform3D;
-            transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
-            transform.m42 = transform.m42 + (point.y- self.lastPoint.y)/self.view.frame.size.width*2;
-            self.FillTrans.transform3D = transform;
-            [[GPURenderEngine renderEngine] updateFillWithTransform:transform];
-        }
-            break;
-        case currentTargetText:
-            {
-                CATransform3D transform = self.textTrans.transform3D;
-                transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/self.view.frame.size.width*2;
-                transform.m42 = transform.m42 + (point.y - self.lastPoint.y)/self.view.frame.size.width*2;
-                self.textTrans.transform3D = transform;
-                [[GPURenderEngine renderEngine] updateTextMaskWithTransform:transform];
-            }
-            break;
-            
-        default:
-            break;
-    }
-    
-    self.lastPoint = point;
-
-}
-
-- (void)pinchGes:(UIPinchGestureRecognizer *)sender
-{
-    switch (self.editTarget) {
-        case currentTargetBase:
-            self.baseTrans.transform3D = CATransform3DScale(self.baseTrans.transform3D, sender.scale, sender.scale, 1);
-            [[GPURenderEngine renderEngine] updateBaseWithTransform:CATransform3DScale(self.baseTrans.transform3D, sender.scale, sender.scale, 1)];
-
-            break;
-        case currentTargetFill:
-            self.FillTrans.transform3D = CATransform3DScale(self.FillTrans.transform3D, sender.scale, sender.scale, 1);
-            [[GPURenderEngine renderEngine] updateFillWithTransform:CATransform3DScale(self.FillTrans.transform3D, sender.scale, sender.scale, 1)];
-
-            break;
-        case currentTargetText:
-            self.textTrans.transform3D = CATransform3DScale(self.textTrans.transform3D, sender.scale, sender.scale, 1);
-            [[GPURenderEngine renderEngine] updateTextMaskWithTransform:CATransform3DScale(self.textTrans.transform3D, sender.scale, sender.scale, 1)];
-
-            break;
-            
-        default:
-            break;
-    }
-    sender.scale = 1.0f;
-}
-
-- (void)rotateGes:(UIRotationGestureRecognizer *)sender
-{
-    switch (self.editTarget) {
-        case currentTargetBase:
-            self.baseTrans.transform3D = CATransform3DRotate(self.baseTrans.transform3D, sender.rotation, 0, 0, 1);
-            [[GPURenderEngine renderEngine] updateBaseWithTransform:CATransform3DRotate(self.baseTrans.transform3D, sender.rotation, 0, 0, 1)];
-
-            break;
-        case currentTargetFill:
-            self.FillTrans.transform3D = CATransform3DRotate(self.FillTrans.transform3D, sender.rotation, 0, 0, 1);
-            [[GPURenderEngine renderEngine] updateFillWithTransform:CATransform3DRotate(self.FillTrans.transform3D, sender.rotation, 0, 0, 1)];
-
-            break;
-        case currentTargetText:
-            self.textTrans.transform3D = CATransform3DRotate(self.textTrans.transform3D, sender.rotation, 0, 0, 1);
-            [[GPURenderEngine renderEngine] updateTextMaskWithTransform:CATransform3DRotate(self.textTrans.transform3D, sender.rotation, 0, 0, 1)];
-
-            break;
-            
-        default:
-            break;
-    }
-    sender.rotation = 0.0f;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-
-
-- (void)resetEraseData {
-    
-    if (self.eraseData != NULL) {
-        free(self.eraseData);
-        self.eraseData = NULL;
-    }
-    
-    const size_t bitsPerComponent = 8;
-    const size_t bytesPerRow = panelSize.width * 4; //1byte per pixel
-    self.eraseData = calloc(sizeof(unsigned char), bytesPerRow * panelSize.height);
-    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-    CGContextRef context =
-    CGBitmapContextCreate(self.eraseData, panelSize.width, panelSize.height,
-                          bitsPerComponent, bytesPerRow,
-                          colorSpaceRef,
-                          kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
-    CGColorSpaceRelease(colorSpaceRef);
-    if(NULL == context) {
-        NSLog(@"resetEraseData: Could not create the context");
-        CGContextRelease(context);
-        return;
-    }
-    CGContextSetShouldAntialias(context, true);
-    CGContextSetAllowsAntialiasing(context, true);
-    CGContextSetFillColorWithColor(context, [[UIColor colorWithRed:1 green:1 blue:1 alpha:0.0] CGColor]);
-    CGContextFillRect(context, CGRectMake(0, 0, panelSize.width, panelSize.height));
-    CGContextTranslateCTM(context, 0, panelSize.height);
-    CGContextScaleCTM(context, 1.0f, -1.0f);
-
-    CGImageRef cgImg = CGBitmapContextCreateImage(context);
-    UIImage *img = [UIImage imageWithCGImage:cgImg];
-    
-    CGContextRelease(context);
 }
 
 @end

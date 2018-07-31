@@ -18,9 +18,6 @@
 @property (nonatomic, assign) CATransform3D fillTrans;
 @property (nonatomic, assign) CATransform3D maskTrans;
 
-@property (nonatomic, assign) currentTarget editTarget;
-
-
 @end
 
 @implementation NUMARenderView
@@ -48,6 +45,10 @@
         UIRotationGestureRecognizer *rotateGes = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(rotateGes:)];
         [self addGestureRecognizer:rotateGes];
         
+        self.baseTrans = CATransform3DIdentity;
+        self.fillTrans = CATransform3DIdentity;
+        self.maskTrans = CATransform3DIdentity;
+
     }
     return self;
 }
@@ -163,12 +164,27 @@
 
 - (void)renderWithTransformHandler:(TransformActionBlock)transformHandler
 {
-    
+    self.transformBlock = transformHandler;
 }
 
 - (void)eraserActionWithHandler:(EraserActionBlock)eraserActionHandler
 {
-    
+    self.eraserBlock = eraserActionHandler;
+}
+
+- (void)setBaseInitialTrans:(CATransform3D)baseInitialTrans {
+    _baseInitialTrans = baseInitialTrans;
+    self.baseTrans = _baseInitialTrans;
+}
+
+- (void)setFillInitialTrans:(CATransform3D)fillInitialTrans {
+    _fillInitialTrans = fillInitialTrans;
+    self.fillTrans = fillInitialTrans;
+}
+
+- (void)setTextMaskInitialTrans:(CATransform3D)textMaskInitialTrans {
+    _textMaskInitialTrans = textMaskInitialTrans;
+    self.maskTrans = _textMaskInitialTrans;
 }
 
 @end

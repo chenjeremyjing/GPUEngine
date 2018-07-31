@@ -14,10 +14,10 @@
 
 @interface GPURenderEngine : NSObject
 
-//最后添加的动态视频纹理
+//最后添加的动态视频纹理 （用于多视频合成）
 @property (nonatomic, strong) GPUImageMovie *lastMovie;
 
-//最后添加的动态视频纹理播放器
+//最后添加的动态视频纹理播放器 （用于多视频合成）
 @property (nonatomic, strong) AVPlayer *lastVideoPlayer;
 
 
@@ -125,12 +125,20 @@
 - (void)updateTextMaskWithTextImage:(UIImage *)textImage;
 
 
-///**
-// 填充层遮罩 -- 文字遮罩
-//
-// @param textLayer 文字转成的layer
-// */
-//- (void)updateTextMaskWithTextLayer:(CALayer *)textLayer;
+/**
+ 填充层遮罩 -- 文字遮罩
+
+ @param textLayer 文字转成的layer
+ */
+- (void)updateTextMaskWithTextView:(UIView *)textView;
+
+
+/**
+ 填充层遮罩 -- 文字遮罩
+
+ @param text 文字富文本
+ */
+- (void)updateTextMaskWithText:(NSMutableAttributedString *)text;
 
 
 /**

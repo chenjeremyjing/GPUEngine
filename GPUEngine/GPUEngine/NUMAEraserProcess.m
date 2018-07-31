@@ -9,7 +9,7 @@
 #import "NUMAEraserProcess.h"
 
 @implementation NUMAEraserProcess
-+ (void)resetEraseDataWithData:(char *)eraserData size:(CGSize)size {
++ (void)resetEraseDataWithData:(unsigned char *)eraserData size:(CGSize)size {
     
     if (eraserData != NULL) {
         free(eraserData);
@@ -41,7 +41,7 @@
     CGContextRelease(context);
 }
 
-+ (UIImage *)updateEraseDataWithData:(char *)eraserData
++ (UIImage *)updateEraseDataWithData:(unsigned char *)eraserData
                           eraserSize:(CGSize)eraserSize
                            strokeImg:(UIImage *)strokeImg
                       eraseTouchSize:(CGFloat)eraseTouchSize

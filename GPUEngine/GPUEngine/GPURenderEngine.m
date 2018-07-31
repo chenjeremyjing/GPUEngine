@@ -140,14 +140,21 @@ static GPURenderEngine *engine = nil;
 //遮罩 文字
 - (void)updateTextMaskWithTextImage:(UIImage *)textImage
 {
-    self.maskRenderTask.textMaskTexture = [[GPUImagePicture alloc] initWithImage:textImage];
-    [self processAll];
+//    self.maskRenderTask.textMaskTexture = [[GPUImagePicture alloc] initWithImage:textImage];
+//    [self processAll];
 
 }
-- (void)updateTextMaskWithTextLayer:(CALayer *)textLayer
+- (void)updateTextMaskWithTextView:(UIView *)textView
 {
-    //    self.maskRenderTask.textMaskTexture = [
+    self.maskRenderTask.textMaskTexture = [[GPUImageUIElement alloc] initWithView:textView];
+    [self processAll];
 }
+
+//- (void)updateTextMaskWithText:(NSMutableAttributedString *)text
+//{
+//    self.maskRenderTask.
+//}
+
 - (void)updateTextMaskWithTransform:(CATransform3D)transform
 {
     self.maskRenderTask.textMaskTransform = transform;

@@ -32,7 +32,7 @@
 }
 
 - (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
-    [self.textMaskTexture processImage];
+    [self.textMaskTexture update];
     [self.eraserMaskTexture processData];
 }
 
@@ -52,13 +52,21 @@
     return _compositeFilter;
 }
 
-- (void)setTextMaskTexture:(GPUImagePicture *)textMaskTexture {
+//- (void)setTextMaskTexture:(GPUImagePicture *)textMaskTexture {
+//    [_textMaskTexture removeAllTargets];
+//
+//    _textMaskTexture = textMaskTexture;
+//    [_textMaskTexture addTarget:self.textTransFilter];
+//    [_textTransFilter addTarget:self.compositeFilter atTextureLocation:textMaskTextureLocation];
+//
+//}
+
+- (void)setTextMaskTexture:(GPUImageUIElement *)textMaskTexture {
     [_textMaskTexture removeAllTargets];
     
     _textMaskTexture = textMaskTexture;
     [_textMaskTexture addTarget:self.textTransFilter];
     [_textTransFilter addTarget:self.compositeFilter atTextureLocation:textMaskTextureLocation];
-    
 }
 
 - (void)setEraserMaskTexture:(GPUImageRawDataInput *)eraserMaskTexture {

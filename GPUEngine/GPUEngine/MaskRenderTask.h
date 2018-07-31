@@ -12,7 +12,9 @@
 
 @property (nonatomic, strong) GPUImageRawDataInput *eraserMaskTexture;
 
-@property (nonatomic, strong) GPUImagePicture *textMaskTexture;
+//@property (nonatomic, strong) GPUImagePicture *textMaskTexture;
+
+@property (nonatomic, strong) GPUImageUIElement *textMaskTexture;
 
 @property (nonatomic, strong) GPUImageOutput *colorMaskTexture;
 
