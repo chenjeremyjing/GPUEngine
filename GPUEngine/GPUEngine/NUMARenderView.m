@@ -16,7 +16,7 @@
 
 @property (nonatomic, assign) CATransform3D baseTrans;
 @property (nonatomic, assign) CATransform3D fillTrans;
-@property (nonatomic, assign) CATransform3D maskTrans;
+@property (nonatomic, assign) CATransform3D textMaskTrans;
 
 @end
 
@@ -47,7 +47,7 @@
         
         self.baseTrans = CATransform3DIdentity;
         self.fillTrans = CATransform3DIdentity;
-        self.maskTrans = CATransform3DIdentity;
+        self.textMaskTrans = CATransform3DIdentity;
 
     }
     return self;
@@ -74,18 +74,18 @@
         case currentTargetFill:
         {
             CATransform3D transform = self.fillTrans;
-            transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/panelSize.width*2;
-            transform.m42 = transform.m42 + (point.y- self.lastPoint.y)/panelSize.width*2;
+            transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/panelSize.width;
+            transform.m42 = transform.m42 + (point.y- self.lastPoint.y)/panelSize.width;
             self.fillTrans = transform;
             [self setCurrentTransform:transform];
         }
             break;
         case currentTargetText:
         {
-            CATransform3D transform = self.maskTrans;
+            CATransform3D transform = self.textMaskTrans;
             transform.m41 = transform.m41 + (point.x - self.lastPoint.x)/panelSize.width*2;
             transform.m42 = transform.m42 + (point.y - self.lastPoint.y)/panelSize.width*2;
-            self.maskTrans = transform;
+            self.textMaskTrans = transform;
             [self setCurrentTransform:transform];
         }
             break;
@@ -102,7 +102,7 @@
     }
     
     self.lastPoint = point;
-    
+
 }
 
 - (void)pinchGes:(UIPinchGestureRecognizer *)sender
@@ -119,8 +119,8 @@
 
             break;
         case currentTargetText:
-            self.maskTrans = CATransform3DScale(self.maskTrans, sender.scale, sender.scale, 1);
-            [self setCurrentTransform:CATransform3DScale(self.maskTrans, sender.scale, sender.scale, 1)];
+            self.textMaskTrans = CATransform3DScale(self.textMaskTrans, sender.scale, sender.scale, 1);
+            [self setCurrentTransform:CATransform3DScale(self.textMaskTrans, sender.scale, sender.scale, 1)];
 
             break;
             
@@ -144,8 +144,8 @@
 
             break;
         case currentTargetText:
-            self.maskTrans = CATransform3DRotate(self.maskTrans, sender.rotation, 0, 0, 1);
-            [self setCurrentTransform:CATransform3DRotate(self.maskTrans, sender.rotation, 0, 0, 1)];
+            self.textMaskTrans = CATransform3DRotate(self.textMaskTrans, sender.rotation, 0, 0, 1);
+            [self setCurrentTransform:CATransform3DRotate(self.textMaskTrans, sender.rotation, 0, 0, 1)];
 
             break;
             
@@ -153,6 +153,40 @@
             break;
     }
     sender.rotation = 0.0f;
+}
+
+- (void)updateTextMaskTransformWithRotation:(CGFloat)rotation x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z
+{
+    self.textMaskTrans = CATransform3DRotate(self.textMaskTrans, rotation, x, y, z);
+    self.editTarget = currentTargetText;
+    [self setCurrentTransform:self.textMaskTrans];
+}
+
+- (void)resetTransform
+{
+    
+    
+    switch (self.editTarget) {
+        case currentTargetBase:
+        {
+            self.baseTrans = CATransform3DIdentity;
+        }
+            break;
+        case currentTargetFill:
+        {
+            self.fillTrans = CATransform3DIdentity;
+        }
+            break;
+        case currentTargetText:
+        {
+            self.textMaskTrans = CATransform3DIdentity;
+
+        }
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)setCurrentTransform:(CATransform3D)transform
@@ -170,21 +204,6 @@
 - (void)eraserActionWithHandler:(EraserActionBlock)eraserActionHandler
 {
     self.eraserBlock = eraserActionHandler;
-}
-
-- (void)setBaseInitialTrans:(CATransform3D)baseInitialTrans {
-    _baseInitialTrans = baseInitialTrans;
-    self.baseTrans = _baseInitialTrans;
-}
-
-- (void)setFillInitialTrans:(CATransform3D)fillInitialTrans {
-    _fillInitialTrans = fillInitialTrans;
-    self.fillTrans = fillInitialTrans;
-}
-
-- (void)setTextMaskInitialTrans:(CATransform3D)textMaskInitialTrans {
-    _textMaskInitialTrans = textMaskInitialTrans;
-    self.maskTrans = _textMaskInitialTrans;
 }
 
 @end

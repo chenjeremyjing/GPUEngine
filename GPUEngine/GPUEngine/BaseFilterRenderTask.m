@@ -27,6 +27,14 @@
     [self.filterLinerStyleHelper.sufixFilter addTarget:target];
 }
 
+- (void)removeTarget:(id<GPUImageInput>)target {
+    [self.filterLinerStyleHelper.sufixFilter removeTarget:target];
+}
+
+- (void)removeAllTarget {
+    [self.filterLinerStyleHelper.sufixFilter removeAllTargets];
+}
+
 - (void)updateStyleFilterLineParamValueOne:(CGFloat)valueOne
 {
     //    self.filterLinerStyleHelper.firstAdjustFilter.
@@ -102,7 +110,9 @@
     [self.filterLinerStyleHelper startProcessWithRenderBlock:^(BOOL hasAnimationVideo) {
         [self.baseTexture processImage];
         self.hasAnimationVideo = hasAnimationVideo;
-        self.renderBlock(hasAnimationVideo);
+        if (self.renderBlock) {
+            self.renderBlock(hasAnimationVideo);
+        }
     }];
 }
 

@@ -53,6 +53,7 @@
 		3F4CA4DF20F8A847003C1FD0 /* 效果.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 3F4CA4DC20F8A846003C1FD0 /* 效果.mp4 */; };
 		3F6E95A7211065CD005FAEAE /* NUMARenderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E95A6211065CD005FAEAE /* NUMARenderView.m */; };
 		3F6E95AD21107EFA005FAEAE /* NUMAEraserProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F6E95AC21107EFA005FAEAE /* NUMAEraserProcess.m */; };
+		3FA16FDD2111F1DF00087C2B /* WeChat_1533128350.png in Resources */ = {isa = PBXBuildFile; fileRef = 3FA16FDC2111F1DE00087C2B /* WeChat_1533128350.png */; };
 		3FA250BF2109723C00AB0F81 /* NUMAEraserFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FA250BE2109723C00AB0F81 /* NUMAEraserFilter.m */; };
 		3FCE3ADA20E5262C005B6D17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3AD920E5262C005B6D17 /* main.m */; };
 		3FCE3ADD20E5262C005B6D17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3FCE3ADC20E5262C005B6D17 /* AppDelegate.m */; };
@@ -125,6 +126,7 @@
 		3F6E95A6211065CD005FAEAE /* NUMARenderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMARenderView.m; sourceTree = "<group>"; };
 		3F6E95AB21107EFA005FAEAE /* NUMAEraserProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAEraserProcess.h; sourceTree = "<group>"; };
 		3F6E95AC21107EFA005FAEAE /* NUMAEraserProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAEraserProcess.m; sourceTree = "<group>"; };
+		3FA16FDC2111F1DE00087C2B /* WeChat_1533128350.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WeChat_1533128350.png; sourceTree = "<group>"; };
 		3FA250BD2109723C00AB0F81 /* NUMAEraserFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NUMAEraserFilter.h; sourceTree = "<group>"; };
 		3FA250BE2109723C00AB0F81 /* NUMAEraserFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NUMAEraserFilter.m; sourceTree = "<group>"; };
 		3FCE3AD520E5262B005B6D17 /* GPUEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPUEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +198,7 @@
 				3F4CA4AB20F4D3B9003C1FD0 /* preImage.jpg */,
 				3F4CA4AC20F4D3B9003C1FD0 /* shuoming1.jpg */,
 				3F4CA4AD20F4D3B9003C1FD0 /* shuoming2.jpg */,
+				3FA16FDC2111F1DE00087C2B /* WeChat_1533128350.png */,
 			);
 			path = 1510611252017091210art38771;
 			sourceTree = "<group>";
@@ -383,6 +386,7 @@
 				3F4CA4C020F4D3B9003C1FD0 /* b6.png in Resources */,
 				3F4CA4C120F4D3B9003C1FD0 /* b7.png in Resources */,
 				3F4CA4C720F4D3B9003C1FD0 /* shuoming1.jpg in Resources */,
+				3FA16FDD2111F1DF00087C2B /* WeChat_1533128350.png in Resources */,
 				3F4CA4C820F4D3B9003C1FD0 /* shuoming2.jpg in Resources */,
 				3F4CA4BA20F4D3B9003C1FD0 /* b10.png in Resources */,
 				3F4CA4D720F8A83B003C1FD0 /* base.png in Resources */,

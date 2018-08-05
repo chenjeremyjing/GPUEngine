@@ -32,16 +32,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GPUEngine/ViewController.m"
+            timestampString = "555068434.186654"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
+            landmarkName = "-colorChanged:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GPUEngine/GPURenderEngine.m"
-            timestampString = "554740157.42037"
+            filePath = "GPUEngine/FilterLineStyleHelper.m"
+            timestampString = "555068434.187555"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
-            landmarkName = "-exportWithCachePath:andProcessingBlock:"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "-startProcessWithRenderBlock:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -15,6 +15,11 @@
     
 }
 
+- (void)removeTarget:(id<GPUImageInput>)target
+{
+    
+}
+
 - (void)removeAllTarget
 {
     

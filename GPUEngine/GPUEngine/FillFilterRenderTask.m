@@ -34,19 +34,32 @@
     [self.filterLinerStyleHelper.sufixFilter addTarget:target];
 }
 
+- (void)removeTarget:(id<GPUImageInput>)target {
+    [self.filterLinerStyleHelper.sufixFilter removeTarget:target];
+}
+
+- (void)removeAllTarget {
+    [super removeAllTarget];
+    [self.filterLinerStyleHelper.sufixFilter removeAllTargets];
+}
+
 - (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
     self.renderBlock = renderBlock;
     __weak typeof(self) weakSelf = self;
     
     if ([weakSelf.fillTexture isKindOfClass:[GPUImageMovie class]]) {
-        weakSelf.renderBlock(YES);
+        if (weakSelf.renderBlock) {
+            weakSelf.renderBlock(YES);
+        }
         GPUImageMovie *movie = (GPUImageMovie *)weakSelf.fillTexture;
         if (weakSelf.player.timeControlStatus == AVPlayerTimeControlStatusPaused) {
             [movie startProcessing];
             [weakSelf.player play];
         }
     } else {
-        weakSelf.renderBlock(NO);
+        if (weakSelf.renderBlock) {
+            weakSelf.renderBlock(NO);
+        }
         GPUImagePicture *pic = (GPUImagePicture *)weakSelf.fillTexture;
         [pic processImage];
     }
@@ -142,8 +155,13 @@
 
 #pragma mark -- Setter && Getter
 - (void)setFillTexture:(GPUImageOutput *)fillTexture {
+    
+    //暂停播放
+    self.player.rate = 0;
     [_fillTexture removeAllTargets];
     _fillTexture = fillTexture;
+    
+    //当前切换资源为视频
     if ([fillTexture isKindOfClass:[GPUImageMovie class]]) {
         GPUImageMovie *movie = (GPUImageMovie *)fillTexture;
         movie.runBenchmark = YES;
@@ -152,13 +170,17 @@
         self.startTime = kCMTimeZero;
         self.endTime = self.player.currentItem.duration;
         movie.renderFrameBlock = ^{
-            self.renderBlock(YES);
+            if (self.renderBlock) {
+                self.renderBlock(YES);
+            }
         };
         
         //更新滤镜链最新添加的播放器和视频
         [GPURenderEngine renderEngine].lastMovie = movie;
         [GPURenderEngine renderEngine].lastVideoPlayer = self.player;
     }
+
+    
     [_fillTexture addTarget:self.fillTransFilter];
     [self.fillTransFilter addTarget:self.filterLinerStyleHelper.prefixFilter];
 }
@@ -225,5 +247,6 @@
 - (BOOL)hasAnimationVideo {
     return self.filterLinerStyleHelper.hasAnimationVideo || [self.fillTexture isKindOfClass:[GPUImageMovie class]];
 }
+
 
 @end

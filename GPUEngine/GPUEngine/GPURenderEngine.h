@@ -47,7 +47,6 @@
  */
 - (void)updateBaseWithTransform:(CATransform3D)transform;
 
-
 /**
  切换底图滤镜风格
  
@@ -58,6 +57,8 @@
 - (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle;
 - (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue;
 - (void)updateBaseFilterLineStyleWithSecondAdjustValue:(CGFloat)adjustValue;
+
+- (void)resetBase;
 
 
 #pragma mark -- 填充涂层相关接口方法
@@ -114,6 +115,7 @@
  */
 - (void)updateFillCompensationColorAlpha:(CGFloat)alpha;
 
+- (void)resetFill;
 
 #pragma mark -- 填充涂层遮罩相关接口方法
 
@@ -147,7 +149,9 @@
  @param transform 文字遮罩的Transform
  */
 - (void)updateTextMaskWithTransform:(CATransform3D)transform;
+- (void)updateTextMaskTransformWithRotation:(CGFloat)rotation x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z;
 
+- (void)resetTextMask;
 
 /**
  填充层遮罩 -- 橡皮擦遮罩
@@ -156,6 +160,13 @@
  */
 - (void)updateEraserMaskWithEraserRawData:(GLubyte *)eraserRawData;
 
+- (void)updateEraserStrokeImg:(UIImage *)strokeImg;
+
+- (void)updateEraserStrokeSize:(CGSize)strokeSize;
+
+- (void)updateEraserType:(BOOL)isEraserType;
+
+- (void)resetEraser;
 
 /**
  填充层遮罩 -- 更新底图颜色抠图遮罩
@@ -208,5 +219,6 @@
  */
 - (void)exportWithCachePath:(NSString *)cachePath andProcessingBlock:(processingBlock)progressBlock;
 
+- (void)processAll;
 
 @end

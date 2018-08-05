@@ -15,12 +15,12 @@ typedef void(^EraserActionBlock)(CGPoint currentLocation, CGPoint preLocation);
 
 @property (nonatomic, assign) currentTarget editTarget;
 
-@property (nonatomic, assign) CATransform3D baseInitialTrans;
-@property (nonatomic, assign) CATransform3D fillInitialTrans;
-@property (nonatomic, assign) CATransform3D textMaskInitialTrans;
-
 - (void)renderWithTransformHandler:(TransformActionBlock)transformHandler;
 
 - (void)eraserActionWithHandler:(EraserActionBlock)eraserActionHandler;
+
+- (void)updateTextMaskTransformWithRotation:(CGFloat)rotation x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z;
+
+- (void)resetTransform;
 
 @end

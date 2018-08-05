@@ -11,6 +11,8 @@
 #import "FillFilterRenderTask.h"
 #import "MaskRenderTask.h"
 #import "FillMaskFilter.h"
+#import "NUMAEraserProcess.h"
+#import "NUMARenderView.h"
 
 @interface GPURenderEngine()
 
@@ -26,7 +28,7 @@
 
 @property (nonatomic, strong) FillMaskFilter *maskFilter;
 
-@property (nonatomic, strong) GPUImageView *gView;
+@property (nonatomic, strong) NUMARenderView *gView;
 
 @property (nonatomic, copy) void(^saveVideoHandle)();
 
@@ -57,18 +59,20 @@ static GPURenderEngine *engine = nil;
     self.baseRenderTask.renderSize = self.baseRenderTask.baseTexture.outputImageSize;
     self.maskRenderTask.colorMaskTexture = self.baseRenderTask.colorMaskfilter;
     [self updateBaseWithTransform:CATransform3DIdentity];
-    [self processAll];
+    [self filterSetUp];
+    
 }
 
 - (void)updateBaseWithTransform:(CATransform3D)transform
 {
     self.baseRenderTask.baseTransform = CATransform3DConcat(transform, [self setContentModeAspectToFitWithSize:self.baseRenderTask.renderSize]);
+    [self processAll];
 }
 
 - (void)updateBaseFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
     self.baseRenderTask.filterStyle = filterStyle;
-    [self processAll];
+    [self filterSetUp];
 }
 
 - (void)updateBaseFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
@@ -80,6 +84,10 @@ static GPURenderEngine *engine = nil;
     [self.fillRendereTask updateStyleFilterLineParamValueTwo:adjustValue];
 }
 
+- (void)resetBase
+{
+    [self updateBaseWithTransform:CATransform3DIdentity];
+}
 
 //填充
 - (void)updateFillResourceWithImage:(UIImage *)fillImage
@@ -88,7 +96,8 @@ static GPURenderEngine *engine = nil;
     self.fillRendereTask.fillTexture = fillTexture;
     self.fillRendereTask.renderSize = fillTexture.outputImageSize;
     [self updateFillWithTransform:CATransform3DIdentity];
-    [self processAll];
+    
+    [self filterSetUp];
 
 }
 
@@ -99,13 +108,14 @@ static GPURenderEngine *engine = nil;
     self.fillRendereTask.fillTexture = movie;    
     self.fillRendereTask.renderSize = videoAsset.naturalSize;
     [self updateFillWithTransform:CATransform3DIdentity];
-    [self processAll];
+    [self filterSetUp];
 
 }
 
 - (void)updateFillWithTransform:(CATransform3D)transform
 {
     self.fillRendereTask.fillTransform = CATransform3DConcat(transform, [self setContentModeAspectToFitWithSize:self.fillRendereTask.renderSize]);
+    [self processAll];
 }
 
 - (void)updateFillCompensationColor:(UIColor *)compensationColor
@@ -121,7 +131,7 @@ static GPURenderEngine *engine = nil;
 - (void)updateFillFilterStyleWithFilterStyle:(FilterLineStyleType)filterStyle
 {
     self.fillRendereTask.filterStyle = filterStyle;
-    [self processAll];
+    [self filterSetUp];
 }
 - (void)updateFillFilterLineStyleWithOneAdjustValue:(CGFloat)adjustValue
 {
@@ -137,6 +147,11 @@ static GPURenderEngine *engine = nil;
     [self.fillRendereTask seekToTime:time];
 }
 
+- (void)resetFill
+{
+    [self updateFillWithTransform:CATransform3DIdentity];
+}
+
 //遮罩 文字
 - (void)updateTextMaskWithTextImage:(UIImage *)textImage
 {
@@ -147,18 +162,30 @@ static GPURenderEngine *engine = nil;
 - (void)updateTextMaskWithTextView:(UIView *)textView
 {
     self.maskRenderTask.textMaskTexture = [[GPUImageUIElement alloc] initWithView:textView];
-    [self processAll];
+    [self filterSetUp];
 }
 
-//- (void)updateTextMaskWithText:(NSMutableAttributedString *)text
-//{
-//    self.maskRenderTask.
-//}
+- (void)updateTextMaskWithText:(NSMutableAttributedString *)text
+{
+    self.maskRenderTask.attributeText = text;
+}
+
+- (void)updateTextMaskTransformWithRotation:(CGFloat)rotation x:(CGFloat)x y:(CGFloat)y z:(CGFloat)z
+{
+    [_gView updateTextMaskTransformWithRotation:rotation x:x y:y z:z];
+}
 
 - (void)updateTextMaskWithTransform:(CATransform3D)transform
 {
     self.maskRenderTask.textMaskTransform = transform;
+    [self processAll];
     
+}
+
+- (void)resetTextMask
+{
+    [self updateTextMaskWithTransform:CATransform3DIdentity];
+    self.maskRenderTask.attributeText = nil;
 }
 
 //遮罩橡皮擦
@@ -166,14 +193,37 @@ static GPURenderEngine *engine = nil;
 {
     if (!self.maskRenderTask.eraserMaskTexture) {
         self.maskRenderTask.eraserMaskTexture = [[GPUImageRawDataInput alloc] initWithBytes:eraserRawData size:panelSize];
+        [self filterSetUp];
     }
     else
     {
         [self.maskRenderTask.eraserMaskTexture updateDataFromBytes:eraserRawData size:panelSize];
+        [self processAll];
     }
     
-    [self processAll];
 }
+
+- (void)updateEraserStrokeImg:(UIImage *)strokeImg
+{
+    self.maskRenderTask.strokeImg = strokeImg;
+}
+
+- (void)updateEraserStrokeSize:(CGSize)strokeSize
+{
+    self.maskRenderTask.strokeSize = strokeSize;
+}
+
+- (void)updateEraserType:(BOOL)isEraserType
+{
+    self.maskRenderTask.isEraser = isEraserType;
+}
+
+- (void)resetEraser
+{
+    self.maskRenderTask.eraseData = [NUMAEraserProcess resetEraseDataWithData:self.maskRenderTask.eraseData size:panelSize];
+    [self updateEraserMaskWithEraserRawData:self.maskRenderTask.eraseData];
+}
+
 
 //遮罩颜色
 - (void)updateColorMaskColorAndTolerance:(render_color)colorAndTolerance
@@ -216,7 +266,6 @@ static GPURenderEngine *engine = nil;
         [self.blendFilter addTarget:_movieWriter];
 
         GPUImageMovie *fillMovie = (GPUImageMovie *)self.fillRendereTask.fillTexture;
-//        fillMovie.audioEncodingTarget = _movieWriter;
         [fillMovie enableSynchronizedEncodingUsingMovieWriter:_movieWriter];
         [self.fillRendereTask startVideoWritingWithStartHanler:^{
             [_movieWriter startRecording];
@@ -227,7 +276,7 @@ static GPURenderEngine *engine = nil;
             }];
         }];
     } else {
-        [self processAll];
+        [self filterSetUp];
         [self.blendFilter useNextFrameForImageCapture];
         UIImage *finalImg = [self.blendFilter imageFromCurrentFramebuffer];
         NSData *finalData = UIImagePNGRepresentation(finalImg);
@@ -236,7 +285,7 @@ static GPURenderEngine *engine = nil;
     
 }
 
-- (void)processAll
+- (void)filterSetUp
 {
     
     if (!self.fillRendereTask.fillTexture
@@ -247,49 +296,58 @@ static GPURenderEngine *engine = nil;
         return;
     }
     
+    [self.fillRendereTask removeTarget:self.maskFilter];
+    [self.maskRenderTask removeTarget:self.maskFilter];
+    [self.baseRenderTask removeTarget:self.blendFilter];
+    [self.maskFilter removeTarget:self.blendFilter];
+    [self.blendFilter removeTarget:self.gView];
+
+    
     [self.fillRendereTask addTarget:self.maskFilter];
     [self.maskRenderTask addTarget:self.maskFilter];
     [self.baseRenderTask addTarget:self.blendFilter];
     [self.maskFilter addTarget:self.blendFilter];
     [self.blendFilter addTarget:self.gView];
     
-    [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-        NSLog(@"rendering----------");
-        [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
-            
-        }];
-        [self.maskRenderTask processAllWithRenderBlock:nil];
-    }];
+    [self processAll];
 
-//    if (self.fillRendereTask.hasAnimationVideo) {
-//        [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-//            [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
-//
-//            }];
-//            [self.maskRenderTask processAllWithRenderBlock:nil];
-//        }];
-//    } else
-//    {
-//        if (self.baseRenderTask.hasAnimationVideo) {
-//            [self.baseRenderTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-//                [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
-//
-//                }];
-//                [self.maskRenderTask processAllWithRenderBlock:nil];
-//            }];
-//        } else
-//        {
-//            [self.baseRenderTask processAllWithRenderBlock:nil];
-//            [self.fillRendereTask processAllWithRenderBlock:nil];
-//            [self.maskRenderTask processAllWithRenderBlock:nil];
-//        }
-//    }
-//
 }
 
-- (void)setRenderView:(GPUImageView *)renderView
+- (void)processAll{
+    if (self.fillRendereTask.hasAnimationVideo) {
+        [self.fillRendereTask processAllWithRenderBlock:^(BOOL hasAnimationVideo) {
+            NSLog(@"rendering----------");
+            [self.baseRenderTask processAllWithRenderBlock:^(BOOL isMovie) {
+                
+            }];
+            [self.maskRenderTask processAllWithRenderBlock:nil];
+        }];
+    } else
+    {
+        [self.fillRendereTask processAllWithRenderBlock:nil];
+        [self.baseRenderTask processAllWithRenderBlock:nil];
+        [self.maskRenderTask processAllWithRenderBlock:nil];
+    }
+}
+
+- (void)setRenderView:(NUMARenderView *)renderView
 {
+    if (self.gView) {
+        return;
+    }
     self.gView = renderView;
+    //橡皮擦
+    self.maskRenderTask.eraseData = [NUMAEraserProcess resetEraseDataWithData:self.maskRenderTask.eraseData size:panelSize];
+    [self updateEraserMaskWithEraserRawData:self.maskRenderTask.eraseData];
+    
+    //文字遮罩
+    [self updateTextMaskWithTextView:self.maskRenderTask.attributeTextPanelView];
+    
+    [self.gView eraserActionWithHandler:^(CGPoint currentLocation, CGPoint preLocation) {
+        self.maskRenderTask.eraseData = [NUMAEraserProcess updateEraseDataWithData:self.maskRenderTask.eraseData eraserSize:panelSize strokeImg:self.maskRenderTask.strokeImg eraseTouchSize:self.maskRenderTask.strokeSize.width eraseType:self.maskRenderTask.isEraser eraseTouchOpacity:1 lastPoint:preLocation currentPoint:currentLocation touchSpeed:1 rotation:0];
+        [self updateEraserMaskWithEraserRawData:self.maskRenderTask.eraseData];
+    }];
+
 }
 
 - (CATransform3D)setContentModeAspectToFitWithSize:(CGSize)size

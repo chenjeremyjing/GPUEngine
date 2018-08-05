@@ -27,7 +27,6 @@
     GPUImagePicture *mask3;
 }
 
-@property (nonatomic)unsigned char * eraseData; //橡皮擦图片地址
 
 @property (nonatomic, strong) UISlider *videoTimeLine;
 @property (nonatomic, strong) UIButton *colorMaskBtn;
@@ -63,9 +62,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    [NUMAEraserProcess resetEraseDataWithData:self.eraseData size:panelSize];
-    
+    // Do any additional setup after loading the view, typically from a nib.    
     self.view.backgroundColor = [UIColor greenColor];
     
     [[UIButton appearance] setBackgroundColor:[UIColor lightGrayColor]];
@@ -90,15 +87,8 @@
     gView.opaque = NO;
     [self.view addSubview:gView];
     
-    textView = [[UIView alloc] initWithFrame:gView.bounds];
-    label = [[UILabel alloc] init];
-    label.center = textView.center;
-    label.bounds = textView.bounds;
-    label.text = @"天使是这样的";
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont boldSystemFontOfSize:30];
-    [textView addSubview:label];
     
+
     [gView renderWithTransformHandler:^(CATransform3D transform, currentTarget targetType) {
         switch (targetType) {
             case currentTargetBase:
@@ -117,11 +107,7 @@
             default:
                 break;
         }
-    }];
-    
-    [gView eraserActionWithHandler:^(CGPoint currentLocation, CGPoint preLocation) {
-        [NUMAEraserProcess updateEraseDataWithData:_eraseData eraserSize:panelSize strokeImg:[UIImage imageNamed:@""] eraseTouchSize:20 eraseType:YES eraseTouchOpacity:0.5 lastPoint:preLocation currentPoint:currentLocation touchSpeed:1 rotation:0];
-        [[GPURenderEngine renderEngine] updateEraserMaskWithEraserRawData:self.eraseData];
+
     }];
     
     UIButton *targetSwitchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -222,12 +208,12 @@
 
 - (void)filterValue1:(UISlider *)sender
 {
-    
+    [[GPURenderEngine renderEngine] updateTextMaskTransformWithRotation:sender.value x:0 y:1 z:0];
 }
 
 - (void)filterValue2:(UISlider *)sender
 {
-    
+    [[GPURenderEngine renderEngine] updateTextMaskTransformWithRotation:sender.value x:1 y:0 z:0];
 }
 
 - (void)styleSwitch:(UIButton *)sender
@@ -258,11 +244,46 @@
     sender.selected = !sender.selected;
     UIColor *color = sender.selected ? [UIColor whiteColor] : [UIColor blueColor];
     [sender setTitle:sender.selected ? @"white" : @"blue" forState:UIControlStateNormal];
+    
+    switch (self.editTarget) {
+        case currentTargetBase:
+            [[GPURenderEngine renderEngine] updateBaseResourceWithImage:[UIImage imageNamed:@"base"]];
+            break;
+        case currentTargetFill:
+//            [[GPURenderEngine renderEngine] updateFillResourceWithImage:[UIImage imageNamed:@"preImage.jpg"]];
+        {
+            AVAsset *videoAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"baseV" ofType:@".mp4"]]];
+            
+            [[GPURenderEngine renderEngine] updateFillResourceWithVideoAsset:videoAsset];
+            [[GPURenderEngine renderEngine] updateFillFilterStyleWithFilterStyle:FilterLineCityStyleType];
+        }
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)colorMask:(UIButton *)sender
 {
-    
+    switch (self.editTarget) {
+        case currentTargetBase:
+            [[GPURenderEngine renderEngine] resetBase];
+            break;
+        case currentTargetFill:
+            [[GPURenderEngine renderEngine] resetFill];
+            break;
+        case currentTargetText:
+            [[GPURenderEngine renderEngine] resetTextMask];
+            break;
+        case currentTargetEraser:
+            [[GPURenderEngine renderEngine] resetEraser];
+            break;
+            
+        default:
+            break;
+    }
+    [gView resetTransform];
 }
 
 - (void)colorOffset:(UISlider *)slider
@@ -395,8 +416,7 @@
         0.1
     };
     pic = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"fill"]];
-    //baseColorSelectMask
-    [renderEngine updateColorMaskColorAndTolerance:maskColor];
+
     //base
     [renderEngine updateBaseResourceWithImage:[UIImage imageNamed:@"fill"]];
     [renderEngine updateBaseFilterStyleWithFilterStyle:FilterLineCartoonStyleType];
@@ -405,13 +425,12 @@
     [renderEngine updateFillFilterStyleWithFilterStyle:FilterLineCityStyleType];
     [renderEngine setFillVideoStartTime:kCMTimeZero];
     [renderEngine setFillVideoEndTime:videoAsset.duration];
-
-    //textMask
-    [renderEngine updateTextMaskWithTextView:textView];
     
-    //eraserMask
-    [renderEngine updateEraserMaskWithEraserRawData:self.eraseData];
-    
+    //baseColorSelectMask
+    [renderEngine updateColorMaskColorAndTolerance:maskColor];
+    [renderEngine updateEraserType:YES];
+    [renderEngine updateEraserStrokeImg:[UIImage imageNamed:@"WeChat_1533128350"]];
+    [renderEngine updateEraserStrokeSize:CGSizeMake(50, 50)];
 }
 
 - (void)setupFilters {

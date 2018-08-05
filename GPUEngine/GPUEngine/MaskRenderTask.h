@@ -10,11 +10,21 @@
 
 @interface MaskRenderTask : GPURenderTask
 
+@property (nonatomic)unsigned char * eraseData; //橡皮擦图片地址
+
+@property (nonatomic, strong) UIImage *strokeImg;
+
+@property (nonatomic, assign) CGSize strokeSize;
+
+@property (nonatomic, assign) BOOL isEraser;
+
 @property (nonatomic, strong) GPUImageRawDataInput *eraserMaskTexture;
 
-//@property (nonatomic, strong) GPUImagePicture *textMaskTexture;
+@property (nonatomic, strong) NSMutableAttributedString *attributeText;
 
 @property (nonatomic, strong) GPUImageUIElement *textMaskTexture;
+
+@property (nonatomic, strong) UIView *attributeTextPanelView;
 
 @property (nonatomic, strong) GPUImageOutput *colorMaskTexture;
 

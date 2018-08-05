@@ -9,7 +9,7 @@
 #import "NUMAEraserProcess.h"
 
 @implementation NUMAEraserProcess
-+ (void)resetEraseDataWithData:(unsigned char *)eraserData size:(CGSize)size {
++ (unsigned char *)resetEraseDataWithData:(unsigned char *)eraserData size:(CGSize)size {
     
     if (eraserData != NULL) {
         free(eraserData);
@@ -29,7 +29,7 @@
     if(NULL == context) {
         NSLog(@"resetEraseData: Could not create the context");
         CGContextRelease(context);
-        return;
+        return NULL;
     }
     CGContextSetShouldAntialias(context, true);
     CGContextSetAllowsAntialiasing(context, true);
@@ -39,9 +39,10 @@
     CGContextScaleCTM(context, 1.0f, -1.0f);
     
     CGContextRelease(context);
+    return eraserData;
 }
 
-+ (UIImage *)updateEraseDataWithData:(unsigned char *)eraserData
++ (unsigned char *)updateEraseDataWithData:(unsigned char *)eraserData
                           eraserSize:(CGSize)eraserSize
                            strokeImg:(UIImage *)strokeImg
                       eraseTouchSize:(CGFloat)eraseTouchSize
@@ -124,7 +125,7 @@
         UIImage * eraseImage = [UIImage imageWithCGImage:newImage];
         CGContextRelease(context);
         CGImageRelease(newImage);
-        return eraseImage;
+        return eraserData;
     }
 }
 

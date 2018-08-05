@@ -18,6 +18,8 @@
 //文字遮罩变形滤镜
 @property (nonatomic, strong) GPUImageTransformFilter *textTransFilter;
 
+@property (nonatomic, strong) UILabel *attributeTextLabel;
+
 @end
 
 #define colorMaskTextureLocation 0      //颜色抠图轮廓遮罩所在纹理下标
@@ -29,6 +31,14 @@
 #pragma mark -- Common Methods
 - (void)addTarget:(id<GPUImageInput>)target {
     [self.compositeFilter addTarget:target];
+}
+
+- (void)removeTarget:(id<GPUImageInput>)target {
+    [self.compositeFilter removeTarget:target];
+}
+
+- (void)removeAllTarget {
+    [self.compositeFilter removeAllTargets];
 }
 
 - (void)processAllWithRenderBlock:(RenderBlock)renderBlock {
@@ -52,14 +62,30 @@
     return _compositeFilter;
 }
 
-//- (void)setTextMaskTexture:(GPUImagePicture *)textMaskTexture {
-//    [_textMaskTexture removeAllTargets];
-//
-//    _textMaskTexture = textMaskTexture;
-//    [_textMaskTexture addTarget:self.textTransFilter];
-//    [_textTransFilter addTarget:self.compositeFilter atTextureLocation:textMaskTextureLocation];
-//
+- (UIView *)attributeTextPanelView {
+    if (!_attributeTextPanelView) {
+        _attributeTextPanelView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, panelSize.width, panelSize.height)];
+        self.attributeTextLabel = [[UILabel alloc] init];
+        self.attributeTextLabel.center = _attributeTextPanelView.center;
+        self.attributeTextLabel.bounds = _attributeTextPanelView.bounds;
+        self.attributeTextLabel.text = @"天使是这样的";
+        self.attributeTextLabel.textColor = [UIColor whiteColor];
+        self.attributeTextLabel.font = [UIFont boldSystemFontOfSize:30];
+        self.attributeTextLabel.layer.contentsScale = 2;
+        [_attributeTextPanelView addSubview:self.attributeTextLabel];
+        _attributeTextPanelView.layer.contentsScale = 2;
+    }
+    return _attributeTextPanelView;
+}
+
+//- (void)setEraseData:(unsigned char *)eraseData {
+//    self.eraseData = eraseData;
+//    [self.eraserMaskTexture updateDataFromBytes:self.eraseData size:panelSize];
 //}
+
+- (void)setAttributeText:(NSMutableAttributedString *)attributeText {
+    self.attributeTextLabel.attributedText = attributeText;
+}
 
 - (void)setTextMaskTexture:(GPUImageUIElement *)textMaskTexture {
     [_textMaskTexture removeAllTargets];

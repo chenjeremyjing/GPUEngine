@@ -19,6 +19,8 @@ typedef void(^RenderBlock)(BOOL hasAnimationVideo);
 
 - (void)addTarget:(id<GPUImageInput>)target;
 
+- (void)removeTarget:(id<GPUImageInput>)target;
+
 - (void)removeAllTarget;
 
 - (void)processAllWithRenderBlock:(RenderBlock)renderBlock;
